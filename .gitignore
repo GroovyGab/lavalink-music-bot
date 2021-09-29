@@ -4,3 +4,4 @@ yarn.lock
 lavalink/
 examples/
 dist/
+yarn-error.log
