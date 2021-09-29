@@ -1,7 +1,6 @@
 node_modules/
 .env
-yarn.lock
+package-lock.json
 lavalink/
 examples/
 dist/
-yarn-error.log
