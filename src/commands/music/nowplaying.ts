@@ -78,11 +78,11 @@ export class UserCommand extends Command {
 				)
 				.setFooter($REMAINING_TIME);
 			return message.reply({ embeds: [$EMBED_REPLY] });
-		} catch (error) {
+		} catch (error: any) {
 			/**
 			 * [All] Error handling.
 			 */
-			this.container.client.logger.error(`There was an unexpected error in command ${this.name}`, error);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error.message);
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}

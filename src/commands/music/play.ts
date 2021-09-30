@@ -79,7 +79,6 @@ export class UserCommand extends Command {
 			const $SPOTIFY_TRACK_URL_REGEX = /(?:https?:\/\/)?(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
 			const $SPOTIFY_PLAYLIST_URL_REGEX =
 				/(?:https?:\/\/)?(?:embed\.|open\.)(?:spotify\.com\/)(?:playlist\/|\?uri=spotify:playlist:)((\w|-){22})/;
-
 			const $SPOTIFY_ALBUM_URL_REGEX = /(?:https?:\/\/)?(?:embed\.|open\.)(?:spotify\.com\/)(?:album\/|\?uri=spotify:playlist:)((\w|-){22})/;
 
 			if ($SPOTIFY_TRACK_URL_REGEX.test($SEARCH)) {
@@ -213,7 +212,7 @@ export class UserCommand extends Command {
 			/**
 			 * [1] Handle whatever other error.
 			 */
-			this.container.client.logger.error(`There was an unexpected error in command ${this.name}`, error);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error.message);
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}

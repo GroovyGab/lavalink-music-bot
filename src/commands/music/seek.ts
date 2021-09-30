@@ -65,11 +65,11 @@ export class UserCommand extends Command {
 
 			switch ($TIME_ARRAY.length) {
 				case 3: {
-					$SEEK_SECONDS = $TIME_ARRAY[0] * 3600 + $TIME_ARRAY[1] * 60 + +$TIME_ARRAY[2]; // converting
+					$SEEK_SECONDS = $TIME_ARRAY[0] * 3600 + $TIME_ARRAY[1] * 60 + +$TIME_ARRAY[2];
 					break;
 				}
 				case 2: {
-					$SEEK_SECONDS = $TIME_ARRAY[0] * 60 + +$TIME_ARRAY[1]; // converting
+					$SEEK_SECONDS = $TIME_ARRAY[0] * 60 + +$TIME_ARRAY[1];
 					break;
 				}
 				case 1: {
@@ -92,7 +92,7 @@ export class UserCommand extends Command {
 			/**
 			 * [1] Error handling.
 			 */
-			this.container.client.logger.error(`There was an unexpected error in command ${this.name}`, error);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error.message);
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}

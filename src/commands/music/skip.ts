@@ -53,11 +53,11 @@ export class UserCommand extends Command {
 			$DISPATCHER.player.stopTrack();
 			$DISPATCHER.player.emit('start');
 			return message.react('👌');
-		} catch (error) {
+		} catch (error: any) {
 			/**
 			 * [All] Error handling.
 			 */
-			this.container.client.logger.error(`There was an unexpected error in command ${this.name}`, error);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error.message);
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}

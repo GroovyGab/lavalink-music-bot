@@ -102,6 +102,7 @@ export class UserCommand extends Command {
 					$EMBED_REPLY.setDescription('You have to be connected to a voice channel before you can use this command!').setColor('RED');
 					return message.reply({ embeds: [$EMBED_REPLY] });
 				}
+
 				/**
 				 * [1] Check if the user is in the same channel as the bot.
 				 */
@@ -112,35 +113,42 @@ export class UserCommand extends Command {
 					return message.reply({ embeds: [$EMBED_REPLY] });
 				}
 
-				if ($DISPATCHER) {
-					switch ($DISPATCHER.repeat) {
-						case 'one': {
-							$DISPATCHER.repeat = 'all';
-							$EMBED_REPLY.setDescription('Now looping the **queue**.').setColor('YELLOW');
-							break;
-						}
-						case 'all': {
-							$DISPATCHER.repeat = 'off';
-							$EMBED_REPLY.setDescription('Looping is now **disabled**.').setColor('RED');
-							break;
-						}
-						case 'off': {
-							$DISPATCHER.repeat = 'one';
-							$EMBED_REPLY.setDescription('Now looping the **current track**.').setColor('GREEN');
-						}
-					}
-
-					return message.reply({ embeds: [$EMBED_REPLY] });
-				} else {
-					$EMBED_REPLY.setDescription("There's no active queue on this server.").setColor('RED');
+				/**
+				 * [1] Check if there's an existing queue.
+				 */
+				if (!$DISPATCHER) {
+					$EMBED_REPLY.setDescription("There's no active queue on this server!").setColor('RED');
 					return message.reply({ embeds: [$EMBED_REPLY] });
 				}
+
+				/**
+				 * [1] Cycle between loop modes.
+				 */
+
+				switch ($DISPATCHER.repeat) {
+					case 'one': {
+						$DISPATCHER.repeat = 'all';
+						$EMBED_REPLY.setDescription('Now looping the **queue**.').setColor('YELLOW');
+						break;
+					}
+					case 'all': {
+						$DISPATCHER.repeat = 'off';
+						$EMBED_REPLY.setDescription('Looping is now **disabled**.').setColor('RED');
+						break;
+					}
+					case 'off': {
+						$DISPATCHER.repeat = 'one';
+						$EMBED_REPLY.setDescription('Now looping the **current track**.').setColor('GREEN');
+					}
+				}
+
+				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
 			/**
 			 * [1] Handle whatever other error.
 			 */
-			this.container.client.logger.error(`There was an unexpected error in command ${this.name}"`, error);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error.message);
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}
