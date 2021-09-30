@@ -96,50 +96,5 @@ export class UserCommand extends Command {
 			$EMBED_REPLY.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [$EMBED_REPLY] });
 		}
-
-		/*if ($HH_MM_SS_REGEX.test($USER_INPUT)) {
-			let $SEEK_SECONDS: number;
-			switch ($TIME_ARRAY.length) {
-				case 3: {
-					$SEEK_SECONDS = $TIME_ARRAY[0] * 3600 + $TIME_ARRAY[1] * 60 + +$TIME_ARRAY[2]; // converting
-					break;
-				}
-				case 2: {
-					$SEEK_SECONDS = $TIME_ARRAY[0] * 60 + +$TIME_ARRAY[1]; // converting
-					break;
-				}
-				case 1: {
-					$SEEK_SECONDS = $TIME_ARRAY[0];
-				}
-			}
-
-			if ($DISPATCHER) {
-				if ($SEEK_SECONDS! > $DISPATCHER.current?.info.length! / 1000) {
-					return message.channel.send('testing.errors.invalidLength');
-				} else {
-					$DISPATCHER.player.seekTo($SEEK_SECONDS! * 1000);
-					return message.react('👌');
-				}
-			} else {
-				return await message.reply('testing.errors.noTrackPlaying');
-			}
-		} else {
-			return message.channel.send('testing.errors.invalidTimeFormat');
-		}
-
-		/*const dispatcher: Dispatcher = await this.container.client.queue.get(message.guild?.id);
-         try {
-             if (dispatcher) {
-             } else {
-                 return await message.reply('testing.errors.noTrackPlaying');
-             }
-         } catch (error) {
-             if (dispatcher) {
-                 dispatcher.destroy(error);
-             }
- 
-             this.container.client.logger.error(error);
-             return await message.reply('testing.errors.unknownError');
-         }*/
 	}
 }
