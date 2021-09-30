@@ -11,8 +11,15 @@ export default class Queue extends Collection<string, Dispatcher> {
 		this.client = client;
 	}
 
-	async handle(guild: Guild, member: GuildMember, channel: TextBasedChannels, node: ShoukakuSocket, track: ShoukakuTrack) {
+	async handle(
+		guild: Guild,
+		member: GuildMember,
+		channel: TextBasedChannels,
+		node: ShoukakuSocket,
+		track: ShoukakuTrack
+	): Promise<void | Dispatcher> {
 		let $DISPATCHER = this.get(guild.id);
+
 		if (!$DISPATCHER) {
 			const $PLAYER = await node.joinChannel({
 				guildId: guild.id,
@@ -28,11 +35,10 @@ export default class Queue extends Collection<string, Dispatcher> {
 			});
 			$DISPATCHER.queue.push(track);
 			this.set(guild.id, $DISPATCHER);
-			this.client.logger.debug($DISPATCHER.constructor.name, `New player dispatcher at guild ${guild.name}[${guild.id}]`);
+			this.client.logger.debug(`${$DISPATCHER.constructor.name}: New player dispatcher at guild ${guild.name}[${guild.id}]`);
 			return $DISPATCHER;
 		}
 
 		$DISPATCHER.queue.push(track);
-		return $DISPATCHER;
 	}
 }
