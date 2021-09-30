@@ -45,7 +45,7 @@ export class UserCommand extends Command {
 			 * [1] Check if there's an existing queue.
 			 */
 			if (!$DISPATCHER) {
-				$EMBED_REPLY.setDescription("There's no active queue on this server.").setColor('RED');
+				$EMBED_REPLY.setDescription("There's no active queue on this server!").setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
@@ -53,7 +53,7 @@ export class UserCommand extends Command {
 			 * [1] Check if the user is in the same channel as the bot.
 			 */
 			if ($USER_CHANNEL!.id !== $BOT_CHANNEL!.id) {
-				$EMBED_REPLY.setDescription('You need to be in the same voice channel as the bot before you can use this command!.').setColor('RED');
+				$EMBED_REPLY.setDescription('You need to be in the same voice channel as the bot before you can use this command!').setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
@@ -61,7 +61,7 @@ export class UserCommand extends Command {
 			 * [1] Check if player is already paused.
 			 */
 			if ($DISPATCHER.player.paused) {
-				$EMBED_REPLY.setDescription('The playback is already paused.').setColor('RED');
+				$EMBED_REPLY.setDescription('The playback is already paused!').setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 

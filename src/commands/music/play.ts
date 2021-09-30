@@ -64,12 +64,12 @@ export class UserCommand extends Command {
 			const $BOT_PERMISSIONS = $USER_CHANNEL.permissionsFor(message.guild?.me!);
 
 			if (!$BOT_PERMISSIONS.has('CONNECT')) {
-				$EMBED_REPLY.setDescription('The "Connect" permission is needed in order to play music in the voice channel.').setColor('RED');
+				$EMBED_REPLY.setDescription('The "Connect" permission is needed in order to play music in the voice channel!').setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
 			if (!$BOT_PERMISSIONS.has('SPEAK')) {
-				$EMBED_REPLY.setDescription('The "Speak" permission is needed in order to play music in the voice channel.').setColor('RED');
+				$EMBED_REPLY.setDescription('The "Speak" permission is needed in order to play music in the voice channel!').setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
@@ -87,7 +87,7 @@ export class UserCommand extends Command {
 				const $VIDEO_RESULT = await this.getSpotifyTrackSource($TRACK_ID, $LAVALINK_NODE);
 
 				if (!$VIDEO_RESULT) {
-					$EMBED_REPLY.setDescription("Couldn't resolve that URL to a track.").setColor('RED');
+					$EMBED_REPLY.setDescription("Couldn't resolve that URL to a track!").setColor('RED');
 					return message.channel.send({ embeds: [$EMBED_REPLY] });
 				}
 
@@ -120,12 +120,12 @@ export class UserCommand extends Command {
 			}
 
 			if ($SPOTIFY_PLAYLIST_URL_REGEX.test($SEARCH)) {
-				$EMBED_REPLY.setDescription('Support for playlists and albums is in development.').setColor('RED');
+				$EMBED_REPLY.setDescription('Support for playlists and albums is in development!').setColor('RED');
 				return message.channel.send({ embeds: [$EMBED_REPLY] });
 			}
 
 			if ($SPOTIFY_ALBUM_URL_REGEX.test($SEARCH)) {
-				$EMBED_REPLY.setDescription('Support for playlists and albums is in development.').setColor('RED');
+				$EMBED_REPLY.setDescription('Support for playlists and albums is in development!').setColor('RED');
 				return message.channel.send({ embeds: [$EMBED_REPLY] });
 			}
 
@@ -136,7 +136,7 @@ export class UserCommand extends Command {
 				const $VIDEO_RESULT = await $LAVALINK_NODE.rest.resolve($SEARCH);
 
 				if (!$VIDEO_RESULT) {
-					$EMBED_REPLY.setDescription("Couldn't resolve the given URL to a track.").setColor('RED');
+					$EMBED_REPLY.setDescription("Couldn't resolve the given URL to a track!").setColor('RED');
 					return message.reply({ embeds: [$EMBED_REPLY] });
 				}
 
@@ -174,7 +174,7 @@ export class UserCommand extends Command {
 			const $VIDEO_RESULT = await $LAVALINK_NODE.rest.resolve($SEARCH, 'youtube');
 
 			if (!$VIDEO_RESULT) {
-				$EMBED_REPLY.setDescription("Couldn't find a result for the given search term.").setColor('RED');
+				$EMBED_REPLY.setDescription("Couldn't find a result for the given search term!").setColor('RED');
 				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
