@@ -100,15 +100,19 @@ export class UserCommand extends Command {
 					$LAVALINK_NODE,
 					$TRACK!
 				);
+
 				if ($PLAYLIST) {
-					for (const $TRACK of $TRACKS)
+					for (const $TRACK of $TRACKS) {
 						await this.container.client.queue.handle(message.guild!, message.member!, message.channel, $LAVALINK_NODE, $TRACK);
+					}
 				}
+
 				$EMBED_REPLY.setDescription(
 					$PLAYLIST
 						? `Queued [${$TRACKS[0].info.title}](${$TRACKS[0].info.uri}) and ${$TRACKS.length} other tracks [${message.author}]`
 						: `Queued [${$TRACK!.info.title}](${$TRACK!.info.uri}) [${message.author}]`
 				);
+
 				$GUILD_DISPATCHER?.play();
 
 				if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
@@ -149,15 +153,19 @@ export class UserCommand extends Command {
 					$LAVALINK_NODE,
 					$TRACK!
 				);
+
 				if ($PLAYLIST) {
-					for (const $TRACK of $TRACKS)
+					for (const $TRACK of $TRACKS) {
 						await this.container.client.queue.handle(message.guild!, message.member!, message.channel, $LAVALINK_NODE, $TRACK);
+					}
 				}
+
 				$EMBED_REPLY.setDescription(
 					$PLAYLIST
 						? `Queued [${$TRACKS[0].info.title}](${$TRACKS[0].info.uri}) and ${$TRACKS.length} other tracks [${message.author}]`
 						: `Queued [${$TRACK!.info.title}](${$TRACK!.info.uri}) [${message.author}]`
 				);
+
 				$GUILD_DISPATCHER?.play();
 
 				if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
@@ -187,15 +195,19 @@ export class UserCommand extends Command {
 				$LAVALINK_NODE,
 				$TRACK!
 			);
+
 			if ($PLAYLIST) {
-				for (const $TRACK of $TRACKS)
+				for (const $TRACK of $TRACKS) {
 					await this.container.client.queue.handle(message.guild!, message.member!, message.channel, $LAVALINK_NODE, $TRACK);
+				}
 			}
+
 			$EMBED_REPLY.setDescription(
 				$PLAYLIST
 					? `Queued [${$TRACKS[0].info.title}](${$TRACKS[0].info.uri}) and ${$TRACKS.length} other tracks [${message.author}]`
 					: `Queued [${$TRACK!.info.title}](${$TRACK!.info.uri}) [${message.author}]`
 			);
+
 			$GUILD_DISPATCHER?.play();
 
 			if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
