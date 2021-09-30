@@ -1,4 +1,4 @@
-import type { ListenerOptions, PieceContext } from '@sapphire/framework';
+import type { ListenerOptions, PieceContext, UserError } from '@sapphire/framework';
 import { Events, Listener } from '@sapphire/framework';
 
 export class UserEvent extends Listener<typeof Events.CommandError> {
@@ -9,7 +9,5 @@ export class UserEvent extends Listener<typeof Events.CommandError> {
 		});
 	}
 
-	public run(..._args: any[]) {
-		return;
-	}
+	public run(_error: UserError) {}
 }
