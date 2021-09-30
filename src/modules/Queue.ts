@@ -12,26 +12,27 @@ export default class Queue extends Collection<string, Dispatcher> {
 	}
 
 	async handle(guild: Guild, member: GuildMember, channel: TextBasedChannels, node: ShoukakuSocket, track: ShoukakuTrack) {
-		const existing = this.get(guild.id);
-		if (!existing) {
-			const player = await node.joinChannel({
+		let $DISPATCHER = this.get(guild.id);
+		if (!$DISPATCHER) {
+			const $PLAYER = await node.joinChannel({
 				guildId: guild.id,
 				shardId: guild.shardId,
 				channelId: member.voice.channelId!
 			});
-			this.client.logger.debug(player.constructor.name, `New connection at guild ${guild.name}[${guild.id}]`);
-			const dispatcher = new Dispatcher({
+			this.client.logger.debug($PLAYER.constructor.name, `New connection at guild ${guild.name}[${guild.id}]`);
+			$DISPATCHER = new Dispatcher({
 				client: this.client,
 				guild,
 				channel,
-				player
+				player: $PLAYER
 			});
-			dispatcher.queue.push(track);
-			this.set(guild.id, dispatcher);
-			this.client.logger.debug(dispatcher.constructor.name, `New player dispatcher at guild ${guild.name}[${guild.id}]`);
-			return dispatcher;
+			$DISPATCHER.queue.push(track);
+			this.set(guild.id, $DISPATCHER);
+			this.client.logger.debug($DISPATCHER.constructor.name, `New player dispatcher at guild ${guild.name}[${guild.id}]`);
+			return $DISPATCHER;
 		}
-		existing.queue.push(track);
-		return null;
+
+		$DISPATCHER.queue.push(track);
+		return $DISPATCHER;
 	}
 }

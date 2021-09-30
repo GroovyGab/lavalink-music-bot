@@ -23,6 +23,7 @@ export default class Dispatcher {
 		this.stopped = false;
 
 		let _notifiedOnce = false;
+		const $EMBED_REPLY = new MessageEmbed();
 
 		this.player.on('start', () => {
 			if (this.repeat === 'one' || this.queue.length < 1) {
@@ -38,19 +39,17 @@ export default class Dispatcher {
 		});
 
 		this.player.on('closed', (data) => {
-			if (data instanceof Error || data instanceof Object) this.client.logger.error(data);
-			this.queue.length = 0;
-			this.destroy(data.reason);
-			const $EMBED = new MessageEmbed().setDescription('There was an unexpected error, try again later.').setColor('RED');
-			this.channel.send({ embeds: [$EMBED] });
+			this.client.logger.debug(data);
+			$EMBED_REPLY.setDescription(`The player was disconnected, Reason: ${data.reason}`);
+			this.channel.send({ embeds: [$EMBED_REPLY] });
 		});
 
 		this.player.on('error', (data) => {
-			if (data instanceof Error) this.client.logger.error(data);
+			this.client.logger.error(data.message);
 			this.queue.length = 0;
 			this.destroy(data.message);
-			const $EMBED = new MessageEmbed().setDescription('There was an unexpected error, try again later.').setColor('RED');
-			this.channel.send({ embeds: [$EMBED] });
+			$EMBED_REPLY.setDescription('There was an unexpected error, try again later.').setColor('RED');
+			this.channel.send({ embeds: [$EMBED_REPLY] });
 		});
 	}
 
@@ -65,7 +64,13 @@ export default class Dispatcher {
 	}
 
 	public play() {
-		if (!this.exists || !this.queue.length) return this.destroy('Queue end.');
+		const $EMBED_REPLY = new MessageEmbed();
+		if (!this.exists || !this.queue.length) {
+			$EMBED_REPLY.setDescription('Queue has ended, feel free to add more songs using `%play`.');
+			this.channel.send({ embeds: [$EMBED_REPLY] });
+			return;
+			//return this.destroy('Queue end.');
+		}
 		this.current = this.queue.shift();
 		this.player.setVolume(0.3).playTrack(this.current!.track);
 	}
@@ -79,7 +84,5 @@ export default class Dispatcher {
 			`Destroyed the player and connection at guild ${this.guild.name}[${this.guild.id}]\nReason: ${reason || 'No Reason Provided.'}`
 		);
 		if (this.stopped) return;
-		const $EMBED = new MessageEmbed().setDescription('Queue has ended, feel free to add more songs using `%play`.');
-		this.channel.send({ embeds: [$EMBED] }).catch(() => null);
 	}
 }
