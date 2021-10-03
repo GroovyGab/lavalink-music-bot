@@ -13,7 +13,7 @@ import { splitBar } from 'string-progressbar';
 @ApplyOptions<CommandOptions>({
 	name: 'nowplaying',
 	aliases: ['np', 'current'],
-	description: 'Shows the currentply playing track.',
+	description: 'Shows the currently playing track.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
@@ -56,7 +56,7 @@ export class UserCommand extends Command {
 			 */
 			if (!$DISPATCHER.current) {
 				$EMBED_REPLY.setDescription("There's no track currently playing on this guild!").setColor('RED');
-				message.reply({ embeds: [$EMBED_REPLY] });
+				return message.reply({ embeds: [$EMBED_REPLY] });
 			}
 
 			const $STREAM = $DISPATCHER.current?.info.isStream;

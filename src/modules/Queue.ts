@@ -11,13 +11,7 @@ export default class Queue extends Collection<string, Dispatcher> {
 		this.client = client;
 	}
 
-	async handle(
-		guild: Guild,
-		member: GuildMember,
-		channel: TextBasedChannels,
-		node: ShoukakuSocket,
-		track: ShoukakuTrack
-	): Promise<void | Dispatcher> {
+	async handle(guild: Guild, member: GuildMember, channel: TextBasedChannels, node: ShoukakuSocket, track: ShoukakuTrack) {
 		let $DISPATCHER = this.get(guild.id);
 
 		if (!$DISPATCHER) {
@@ -40,5 +34,11 @@ export default class Queue extends Collection<string, Dispatcher> {
 		}
 
 		$DISPATCHER.queue.push(track);
+		return null;
+		//console.log($DISPATCHER.queue);
+
+		/*if (!$DISPATCHER.queue.length) {
+			return $DISPATCHER;
+		}*/
 	}
 }

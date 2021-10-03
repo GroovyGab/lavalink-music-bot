@@ -4,3 +4,4 @@ package-lock.json
 lavalink/
 examples/
 dist/
+.idea/

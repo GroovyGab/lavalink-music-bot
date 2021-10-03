@@ -68,9 +68,9 @@ export default class Dispatcher {
 		if (!this.exists || !this.queue.length) {
 			$EMBED_REPLY.setDescription('Queue has ended, feel free to add more songs using `%play`.');
 			this.channel.send({ embeds: [$EMBED_REPLY] });
-			return;
-			//return this.destroy('Queue end.');
+			return this.destroy('Queue end.');
 		}
+		
 		this.current = this.queue.shift();
 		this.player.setVolume(0.3).playTrack(this.current!.track);
 	}

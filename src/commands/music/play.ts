@@ -116,7 +116,7 @@ export class UserCommand extends Command {
 				$GUILD_DISPATCHER?.play();
 
 				if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
-					this.becomeStageSpeaker(message, $BOT_PERMISSIONS);
+					UserCommand.becomeStageSpeaker(message, $BOT_PERMISSIONS);
 				}
 
 				return message.reply({ embeds: [$EMBED_REPLY] });
@@ -135,7 +135,7 @@ export class UserCommand extends Command {
 			/**
 			 * Handle whatever other url.
 			 */
-			if (this.checkURL($SEARCH)) {
+			if (UserCommand.checkURL($SEARCH)) {
 				const $VIDEO_RESULT = await $LAVALINK_NODE.rest.resolve($SEARCH);
 
 				if (!$VIDEO_RESULT) {
@@ -169,7 +169,7 @@ export class UserCommand extends Command {
 				$GUILD_DISPATCHER?.play();
 
 				if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
-					this.becomeStageSpeaker(message, $BOT_PERMISSIONS);
+					UserCommand.becomeStageSpeaker(message, $BOT_PERMISSIONS);
 				}
 
 				return message.reply({ embeds: [$EMBED_REPLY] });
@@ -211,7 +211,7 @@ export class UserCommand extends Command {
 			$GUILD_DISPATCHER?.play();
 
 			if ($USER_CHANNEL.type === 'GUILD_STAGE_VOICE') {
-				this.becomeStageSpeaker(message, $BOT_PERMISSIONS);
+				UserCommand.becomeStageSpeaker(message, $BOT_PERMISSIONS);
 			}
 
 			return message.reply({ embeds: [$EMBED_REPLY] });
@@ -230,7 +230,7 @@ export class UserCommand extends Command {
 		}
 	}
 
-	private checkURL(url: string) {
+	private static checkURL(url: string) {
 		try {
 			new URL(url);
 			return true;
@@ -253,7 +253,7 @@ export class UserCommand extends Command {
 		}
 	}
 
-	private becomeStageSpeaker(message: Message, bot_permissions: Readonly<Permissions>) {
+	private static becomeStageSpeaker(message: Message, bot_permissions: Readonly<Permissions>) {
 		const $EMBED_REPLY = new MessageEmbed();
 
 		if (!bot_permissions.has('MANAGE_CHANNELS') || !bot_permissions.has('MUTE_MEMBERS') || !bot_permissions.has('MOVE_MEMBERS')) {

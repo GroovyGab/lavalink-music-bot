@@ -4,7 +4,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
-//@ts-ignore
 import type Dispatcher from '../../modules/Dispatcher';
 
 /**
