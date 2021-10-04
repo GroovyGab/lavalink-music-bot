@@ -44,7 +44,7 @@
 		"@sapphire/prettier-config": "^1.1.6",
 		"@sapphire/ts-config": "^3.0.0",
 		"@types/node": "^16.7.10",
-		"@types/node-cron": "^2.0.4",
+		"@types/node-cron": "^3.0.0",
 		"@types/spotify-api": "^0.0.11",
 		"@types/spotify-web-api-node": "^5.0.3",
 		"@types/ws": "^8.2.0",
