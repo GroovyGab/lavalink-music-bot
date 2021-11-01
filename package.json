@@ -18,7 +18,7 @@
 		"shoukaku"
 	],
 	"dependencies": {
-		"@discordjs/collection": "^0.2.1",
+		"@discordjs/collection": "^0.3.2",
 		"@sapphire/decorators": "next",
 		"@sapphire/discord-utilities": "^2.1.5",
 		"@sapphire/discord.js-utilities": "next",
