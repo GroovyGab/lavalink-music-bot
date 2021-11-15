@@ -1,5 +1,6 @@
 import type { LavalinkHandler } from './structures/Music/LavalinkHandler';
 import type { Queue } from './structures/Music/Queue';
+import type { SlashCommandStore } from './structures/SlashCommands/SlashCommandStore';
 
 declare module 'discord.js' {
 	interface Client {
@@ -7,8 +8,6 @@ declare module 'discord.js' {
 		queue: Queue;
 	}
 }
-
-import type { SlashCommandStore } from './structures/SlashCommands/SlashCommandStore';
 
 declare module '@sapphire/framework' {
 	interface StoreRegistryEntries {
