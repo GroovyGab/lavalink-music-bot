@@ -32,7 +32,7 @@ run lavalink:
 java -jar Lavalink.jar
 ```
 
-rename the `.env.example` file `src` to `.env`
+rename the `.env.example` file in `src` to `.env`
 
 populate the `.env` file:
 
