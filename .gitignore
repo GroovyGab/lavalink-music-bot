@@ -3,3 +3,4 @@ node_modules/
 dist/
 lavalink_server/
 src/util/SlashCommandUtil/config.json
+src/commands/General

@@ -51,6 +51,7 @@ export class LavalinkDispatcher {
 			const guild = this.client.guilds.cache.get(data.guildId);
 			this.client.logger.info(`Player was closed in guild ${guild?.name}[${guild?.id}], Reason: ${data.reason}`);
 			this.embedReply.setDescription(`The player was disconnected.`);
+			this.destroy('Connection closed.');
 			this.channel.send({ embeds: [this.embedReply] });
 		});
 
