@@ -5,12 +5,9 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
-/**
- * Command options.
- */
 @ApplyOptions<CommandOptions>({
-	name: 'resume',
-	description: 'Resume your currently playing track.',
+	name: 'back',
+	description: 'Skips to the previous song.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
@@ -42,13 +39,20 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.paused) {
-				embedReply.setDescription("The playback isn't paused!").setColor('RED');
+			if (!erelaPLayer.queue.previous) {
+				embedReply.setDescription("There's no previous song to go back to.");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			erelaPLayer.pause(false);
-			return message.react('⏸️');
+			erelaPLayer.queue.add(erelaPLayer.queue.previous);
+
+			if (erelaPLayer.queue.current) {
+				erelaPLayer.queue.add(erelaPLayer.queue.current);
+			}
+
+			erelaPLayer.stop();
+
+			return message.react('👌');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');

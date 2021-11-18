@@ -112,9 +112,7 @@ export class LavalinkHandler extends Manager {
 
 				if (!channel?.isText()) return;
 
-				this.embedReply
-					.setDescription(`Track "${track.title}" requested by [${track.requester}] got stuck during playback, Skipping...`)
-					.setColor('RED');
+				this.embedReply.setDescription(`Track "${track.title}" requested by [${track.requester}] got stuck during playback, Skipping...`);
 
 				channel.send({ embeds: [this.embedReply] });
 
@@ -128,9 +126,7 @@ export class LavalinkHandler extends Manager {
 
 				if (!channel?.isText()) return;
 
-				this.embedReply
-					.setDescription(`Track "${track.title}" requested by [${track.requester}] had an error during playback, Skipping...`)
-					.setColor('RED');
+				this.embedReply.setDescription(`Track "${track.title}" requested by [${track.requester}] had an error during playback, Skipping...`);
 
 				channel.send({ embeds: [this.embedReply] });
 

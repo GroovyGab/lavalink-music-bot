@@ -31,41 +31,41 @@ export class UserCommand extends Command {
 			const search = await args.rest('string');
 
 			if (!userVoiceChannel) {
-				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!').setColor('RED');
+				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPLayer && userVoiceChannel.id !== botVoiceChannel?.id) {
-				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!').setColor('RED');
+				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
-				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!').setColor('RED');
+				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (!userVCBotPermissions.has('SPEAK')) {
-				embedReply.setDescription('The "Speak" permission is needed in order to play music in the voice channel!').setColor('RED');
+				embedReply.setDescription('The "Speak" permission is needed in order to play music in the voice channel!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			const result = await this.container.client.manager.search(search, message.author);
 
 			if (result.loadType === 'NO_MATCHES') {
-				embedReply.setDescription("Couldn't find a result for the given search term!").setColor('RED');
+				embedReply.setDescription("Couldn't find a result for the given search term!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (result.loadType === 'LOAD_FAILED') {
-				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load that track!').setColor('RED');
+				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load that track!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (result.loadType === 'PLAYLIST_LOADED' && result.playlist && result.playlist?.duration <= 0) {
-				embedReply.setDescription("That playlist's duration is too small!").setColor('RED');
+				embedReply.setDescription("That playlist's duration is too small!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -101,7 +101,7 @@ export class UserCommand extends Command {
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
-				embedReply.setDescription('You must specify a search term!').setColor('RED');
+				embedReply.setDescription('You must specify a search term!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -115,11 +115,10 @@ export class UserCommand extends Command {
 		const $EMBED_REPLY = new MessageEmbed();
 
 		if (!bot_permissions.has('MANAGE_CHANNELS') || !bot_permissions.has('MUTE_MEMBERS') || !bot_permissions.has('MOVE_MEMBERS')) {
-			$EMBED_REPLY
-				.setDescription(
-					"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
-				)
-				.setColor('RED');
+			$EMBED_REPLY.setDescription(
+				"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
+			);
+
 			return message.channel.send({ embeds: [$EMBED_REPLY] });
 		}
 

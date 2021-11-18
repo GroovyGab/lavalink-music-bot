@@ -22,27 +22,27 @@ export class UserCommand extends Command {
 			const skipAmmount = await args.rest('integer');
 
 			if (!userVoiceChannel) {
-				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!').setColor('RED');
+				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPLayer) {
-				embedReply.setDescription("There isn't an active player on this server!").setColor('RED');
+				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing) {
-				embedReply.setDescription("There's nothing currently playing on this server!").setColor('RED');
+			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (userVoiceChannel.id !== botVoiceChannel?.id) {
-				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!').setColor('RED');
+				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (skipAmmount > erelaPLayer.queue.length + 1) {
-				embedReply.setDescription("The ammount of songs to be skipped can't be larger than que queue's length!").setColor('RED');
+				embedReply.setDescription("The ammount of songs to be skipped can't be larger than que queue's length!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -51,22 +51,22 @@ export class UserCommand extends Command {
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				if (!userVoiceChannel) {
-					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!').setColor('RED');
+					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 					return message.reply({ embeds: [embedReply] });
 				}
 
 				if (!erelaPLayer) {
-					embedReply.setDescription("There isn't an active player on this server!").setColor('RED');
+					embedReply.setDescription("There isn't an active player on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
 				if (!erelaPLayer.playing) {
-					embedReply.setDescription("There's nothing currently playing on this server!").setColor('RED');
+					embedReply.setDescription("There's nothing currently playing on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
 				if (userVoiceChannel.id !== botVoiceChannel?.id) {
-					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!').setColor('RED');
+					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 					return message.reply({ embeds: [embedReply] });
 				}
 
