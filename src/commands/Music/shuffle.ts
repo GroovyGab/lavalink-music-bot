@@ -11,11 +11,5 @@ import type { Message } from 'discord.js';
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
-	public async messageRun(_message: Message) {
-		try {
-			return;
-		} catch (error) {
-			return;
-		}
-	}
+	public async messageRun(_message: Message) {}
 }

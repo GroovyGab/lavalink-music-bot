@@ -1,12 +1,10 @@
 import '../lib/setup';
 import { SapphireClient, LogLevel } from '@sapphire/framework';
-import { LavalinkHandler } from './Music/LavalinkHandler';
-import { Queue } from './Music/Queue';
 import { SlashCommandStore } from './SlashCommands/SlashCommandStore';
+import { LavalinkHandler } from './Music/LavalinkHandler';
+import { Collection } from 'discord.js';
 
 export class MusicBotClient extends SapphireClient {
-	lavalink: LavalinkHandler;
-	queue: Queue;
 	constructor() {
 		super({
 			defaultPrefix: process.env.PREFIX,
@@ -29,10 +27,25 @@ export class MusicBotClient extends SapphireClient {
 		});
 
 		this.validate();
-
-		this.lavalink = new LavalinkHandler(this);
-		this.queue = new Queue(this);
+		this.manager = new LavalinkHandler(this);
+		this.players = new Collection();
 		this.stores.register(new SlashCommandStore());
+	}
+
+	public async main() {
+		try {
+			this.logger.info('Logging in...');
+			await this.login();
+			this.logger.info('Logged in!');
+		} catch (error) {
+			this.logger.fatal(error);
+			this.destroy();
+			process.exit(1);
+		}
+	}
+
+	public sleep(ms: number) {
+		return new Promise((res) => setTimeout(res, ms));
 	}
 
 	private validate() {
@@ -58,19 +71,6 @@ export class MusicBotClient extends SapphireClient {
 
 		if (!process.env.LAVALINK_PASSWD) {
 			throw new Error("A Lavalink node's password must be specified!");
-		}
-	}
-
-	public async main() {
-		try {
-			this.logger.info('Logging in...');
-
-			await this.login();
-			this.logger.info('Logged in!');
-		} catch (error) {
-			this.logger.fatal(error);
-			this.destroy();
-			process.exit(1);
 		}
 	}
 }

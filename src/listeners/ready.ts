@@ -14,10 +14,11 @@ export class UserEvent extends Listener {
 		});
 	}
 
-	public run() {
+	public async run() {
 		this.container.logger.info(`Client ready; Logged in as ${this.container.client.user?.tag} (${this.container.client.user?.id})`);
 		this.printBanner();
 		this.printStoreDebugInformation();
+		this.container.client.manager.init(this.container.client.id!);
 	}
 
 	private printBanner() {

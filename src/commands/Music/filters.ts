@@ -9,11 +9,5 @@ import type { Message } from 'discord.js';
 	fullCategory: ['Music']
 })
 export class UserCommand extends SubCommandPluginCommand {
-	// Anyone should be able to view the result, but not modify
-	public async karaoke(message: Message) {
-		return message.channel.send('Karaoke filter on');
-	}
-	public async clear(message: Message) {
-		return message.channel.send('cleared all music filters');
-	}
+	public async messageRun(_message: Message) {}
 }
