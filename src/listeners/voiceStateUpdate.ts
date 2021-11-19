@@ -11,7 +11,7 @@ export class UserEvent extends Listener<typeof Events.VoiceStateUpdate> {
 	}
 
 	public run(_oldState: VoiceState, _newState: VoiceState) {
-		// This is a bad system
+		// This is a super bad system
 		/*const erelaPLayer = this.container.client.players.get(oldState.guild.id);
 
 		if (erelaPLayer) {
