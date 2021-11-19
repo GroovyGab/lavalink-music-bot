@@ -24,6 +24,7 @@ export class LavalinkHandler extends Manager {
 				})
 			],
 			autoPlay: true,
+			clientName: `${process.env.CLIENT_NAME}/${process.env.CLIENT_VERSION}`,
 			send: (id, payload) => {
 				const guild = client.guilds.cache.get(id);
 				if (guild) guild.shard.send(payload);
