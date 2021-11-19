@@ -46,11 +46,31 @@ export class UserCommand extends Command {
 			}
 
 			erelaPLayer.setVolume(volume);
-			embedReply.setDescription(`The volume was changed to ${volume}%`);
+			embedReply.setDescription(`The volume was changed to \`${volume}%\``);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
-				embedReply.setDescription('You need to provide a value!');
+				if (!userVoiceChannel) {
+					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
+					return message.reply({ embeds: [embedReply] });
+				}
+
+				if (!erelaPLayer) {
+					embedReply.setDescription("There isn't an active player on this server!");
+					return message.reply({ embeds: [embedReply] });
+				}
+
+				if (!erelaPLayer.playing && !erelaPLayer.paused) {
+					embedReply.setDescription("There's nothing currently playing on this server!");
+					return message.reply({ embeds: [embedReply] });
+				}
+
+				if (userVoiceChannel.id !== botVoiceChannel?.id) {
+					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
+					return message.reply({ embeds: [embedReply] });
+				}
+
+				embedReply.setDescription(`The volume is currently set at \`${erelaPLayer.volume}%\``);
 				return message.reply({ embeds: [embedReply] });
 			}
 
