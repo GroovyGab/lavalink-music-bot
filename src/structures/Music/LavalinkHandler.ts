@@ -74,7 +74,7 @@ export class LavalinkHandler extends Manager {
 			.on('playerMove', async (player, _initCHannel, newVoiceChannel) => {
 				if (!player) return;
 				const guild = this.client.guilds.cache.get(player.guild);
-				const newChannelFetch = this.client.channels.cache.get(newVoiceChannel);
+				//const newChannelFetch = this.client.channels.cache.get(newVoiceChannel);
 
 				if (!newVoiceChannel) {
 					this.client.logger.info(`Player was disconnected from voice channel in guild ${guild?.name}[${guild?.id}]`);
@@ -86,16 +86,6 @@ export class LavalinkHandler extends Manager {
 					await this.client.sleep(1000);
 
 					player.pause(false);
-
-					if (!newChannelFetch || !newChannelFetch.isVoice()) return;
-
-					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
-						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
-						if (!newvCBotPermissions.has('MANAGE_CHANNELS') || !newvCBotPermissions.has('MUTE_MEMBERS') || !newvCBotPermissions.has('MOVE_MEMBERS')) {
-						} else {
-							newChannelFetch.guild.me!.voice.setSuppressed(false);
-						}
-					}
 
 					this.client.logger.info(`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`);
 				}
