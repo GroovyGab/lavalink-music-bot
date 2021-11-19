@@ -74,6 +74,11 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
+			if (error.identifier === 'floatError') {
+				embedReply.setDescription(`The value must be a number!`);
+				return message.reply({ embeds: [embedReply] });
+			}
+
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [embedReply] });
