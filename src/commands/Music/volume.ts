@@ -40,8 +40,8 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!volume || volume < 0 || volume > 200) {
-				embedReply.setDescription('The volume needs to be a value between 0 and 200.');
+			if (!volume || volume < 0 || volume > 100) {
+				embedReply.setDescription('The volume needs to be a value between 0 and 100.');
 				return message.reply({ embeds: [embedReply] });
 			}
 
