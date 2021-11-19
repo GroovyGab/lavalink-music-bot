@@ -10,6 +10,7 @@ import { Message, MessageEmbed } from 'discord.js';
  */
 @ApplyOptions<CommandOptions>({
 	name: 'resume',
+	aliases: ['unpause'],
 	description: 'Resume your currently playing track.',
 	fullCategory: ['music']
 })
