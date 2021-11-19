@@ -44,11 +44,11 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			erelaPLayer.queue.add(erelaPLayer.queue.previous);
-
 			if (erelaPLayer.queue.current) {
-				erelaPLayer.queue.add(erelaPLayer.queue.current);
+				erelaPLayer.queue.unshift(erelaPLayer.queue.current);
 			}
+
+			erelaPLayer.queue.unshift(erelaPLayer.queue.previous);
 
 			erelaPLayer.stop();
 
