@@ -50,7 +50,7 @@ export class UserCommand extends Command {
 			const embedFooter = trackIsStream ? trackProgress : `${splitProgressBar} ${trackProgress} / ${totalTrackLength}`;
 
 			embedReply.setDescription(`[${trackInfo?.title}](${trackInfo?.uri}) [${trackInfo?.requester}]`).setFooter(embedFooter);
-			replyInteractionRow.addComponents(new MessageButton().setCustomId('url').setLabel('Url').setStyle('LINK').setURL(trackInfo?.uri!));
+			replyInteractionRow.addComponents(new MessageButton().setLabel('current_track_uri').setStyle('LINK').setURL(trackInfo?.uri!));
 			return message.reply({ embeds: [embedReply], components: [replyInteractionRow] });
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
