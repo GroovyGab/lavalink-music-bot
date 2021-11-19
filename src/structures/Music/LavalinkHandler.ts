@@ -89,8 +89,7 @@ export class LavalinkHandler extends Manager {
 
 					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
 						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
-						if (!newvCBotPermissions.has('MANAGE_CHANNELS') || !newvCBotPermissions.has('MUTE_MEMBERS') || !newvCBotPermissions.has('MOVE_MEMBERS')) {
-						} else {
+						if (newvCBotPermissions.has('MANAGE_CHANNELS') || newvCBotPermissions.has('MUTE_MEMBERS') || newvCBotPermissions.has('MOVE_MEMBERS')) {
 							newChannelFetch.guild.me!.voice.setSuppressed(false);
 						}
 					}
