@@ -13,7 +13,7 @@ import { Message, MessageEmbed } from 'discord.js';
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
-		const erelaPLayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
@@ -31,22 +31,22 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
+			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+			if (!erelaPlayer.playing && !erelaPlayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (skipAmmount > erelaPLayer.queue.length + 1) {
+			if (skipAmmount > erelaPlayer.queue.length + 1) {
 				embedReply.setDescription("The ammount of songs to be skipped can't be larger than que queue's length!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			erelaPLayer.stop(skipAmmount);
+			erelaPlayer.stop(skipAmmount);
 			return message.react('👌');
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
@@ -60,17 +60,17 @@ export class UserCommand extends Command {
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer) {
+				if (!erelaPlayer) {
 					embedReply.setDescription("There isn't an active player on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer.playing) {
+				if (!erelaPlayer.playing) {
 					embedReply.setDescription("There's nothing currently playing on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				erelaPLayer.stop();
+				erelaPlayer.stop();
 				return message.react('👌');
 			}
 

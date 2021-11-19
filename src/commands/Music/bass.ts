@@ -15,19 +15,28 @@ export class UserCommand extends Command {
 		const embedReply = new MessageEmbed();
 		try {
 			if (!message.guild) return;
-			const erelaPLayer = this.container.client.players.get(message.guild.id);
+			const erelaPlayer = this.container.client.players.get(message.guild.id);
 			const data = {
 				op: 'filters',
 				guildId: message.guild.id,
-				volume: 0.5,
 				equalizer: [
-					{ band: 1, gain: 0.3 },
-					{ band: 0, gain: 0.3 }
-				],
-				timescale: { pitch: 0.5 },
-				tremolo: { depth: 0.3, frequency: 14 }
+					{ band: 0, gain: 0.6 },
+					{ band: 1, gain: 0.67 },
+					{ band: 2, gain: 0.67 },
+					{ band: 3, gain: 0 },
+					{ band: 4, gain: -0.5 },
+					{ band: 5, gain: 0.15 },
+					{ band: 6, gain: -0.45 },
+					{ band: 7, gain: 0.23 },
+					{ band: 8, gain: 0.35 },
+					{ band: 9, gain: 0.45 },
+					{ band: 10, gain: 0.55 },
+					{ band: 11, gain: 0.6 },
+					{ band: 12, gain: 0.55 },
+					{ band: 13, gain: 0 }
+				]
 			};
-			await erelaPLayer?.node.send(data);
+			await erelaPlayer?.node.send(data);
 			return message.reply(':(');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

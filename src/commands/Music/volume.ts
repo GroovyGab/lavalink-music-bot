@@ -13,7 +13,7 @@ import { Message, MessageEmbed } from 'discord.js';
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
-		const erelaPLayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
@@ -25,12 +25,12 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
+			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+			if (!erelaPlayer.playing && !erelaPlayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -45,7 +45,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			erelaPLayer.setVolume(volume);
+			erelaPlayer.setVolume(volume);
 			embedReply.setDescription(`The volume was changed to \`${volume}%\``);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
@@ -60,17 +60,17 @@ export class UserCommand extends Command {
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer) {
+				if (!erelaPlayer) {
 					embedReply.setDescription("There isn't an active player on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer.playing && !erelaPLayer.paused) {
+				if (!erelaPlayer.playing && !erelaPlayer.paused) {
 					embedReply.setDescription("There's nothing currently playing on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				embedReply.setDescription(`The volume is currently set at \`${erelaPLayer.volume}%\``);
+				embedReply.setDescription(`The volume is currently set at \`${erelaPlayer.volume}%\``);
 				return message.reply({ embeds: [embedReply] });
 			}
 

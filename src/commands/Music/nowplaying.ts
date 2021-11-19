@@ -12,7 +12,7 @@ import { splitBar } from 'string-progressbar';
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
-		const erelaPLayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const replyInteractionRow = new MessageActionRow();
 		const { channel: userVoiceChannel } = message.member?.voice!;
@@ -28,21 +28,21 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
+			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+			if (!erelaPlayer.playing && !erelaPlayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const trackIsStream = erelaPLayer.queue.current?.isStream;
-			const trackPosition = erelaPLayer.position;
-			const trackLength = erelaPLayer.queue.current?.duration!;
+			const trackIsStream = erelaPlayer.queue.current?.isStream;
+			const trackPosition = erelaPlayer.position;
+			const trackLength = erelaPlayer.queue.current?.duration!;
 
-			const trackInfo = erelaPLayer.queue.current;
+			const trackInfo = erelaPlayer.queue.current;
 			const splitProgressBar = trackIsStream ? '' : splitBar(trackLength, trackPosition, 20, '▬', '🔵')[0];
 
 			const trackProgress = trackIsStream ? '[◉ LIVE]' : `${this.msToHMS(trackPosition)}`;

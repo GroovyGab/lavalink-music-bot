@@ -12,20 +12,20 @@ export class UserEvent extends Listener<typeof Events.VoiceStateUpdate> {
 
 	public run(_oldState: VoiceState, _newState: VoiceState) {
 		// This is a super bad system
-		/*const erelaPLayer = this.container.client.players.get(oldState.guild.id);
+		/*const erelaPlayer = this.container.client.players.get(oldState.guild.id);
 
-		if (erelaPLayer) {
-			const voiceChannel = this.container.client.channels.cache.get(erelaPLayer.voiceChannel!);
+		if (erelaPlayer) {
+			const voiceChannel = this.container.client.channels.cache.get(erelaPlayer.voiceChannel!);
 
 			if (voiceChannel?.isVoice()) {
 				const voiceChannelMembers = voiceChannel.members.filter((user) => !user.user.bot).size;
-				const guild = this.container.client.guilds.cache.get(erelaPLayer.guild);
-				const channel = this.container.client.channels.cache.get(erelaPLayer.textChannel!);
+				const guild = this.container.client.guilds.cache.get(erelaPlayer.guild);
+				const channel = this.container.client.channels.cache.get(erelaPlayer.textChannel!);
 				const embedReply = new MessageEmbed();
 
 				if (voiceChannelMembers === 0) {
 					const timeout = setTimeout(() => {
-						erelaPLayer.destroy();
+						erelaPlayer.destroy();
 
 						if (!channel?.isText()) return;
 						embedReply.setDescription('I left the voice channel because I was inactive for too long, you can disable this by typing **+247**.');

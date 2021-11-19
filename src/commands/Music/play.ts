@@ -22,7 +22,7 @@ export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
 
-		let erelaPLayer = this.container.client.players.get(message.guild.id);
+		let erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const warnEmbed = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
@@ -36,7 +36,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (erelaPLayer && userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && userVoiceChannel.id !== botVoiceChannel?.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -70,8 +70,8 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
-				erelaPLayer = this.container.client.manager.create({
+			if (!erelaPlayer) {
+				erelaPlayer = this.container.client.manager.create({
 					guild: message.guild.id,
 					voiceChannel: message.member!.voice.channel!.id,
 					textChannel: message.channel.id,
@@ -80,11 +80,11 @@ export class UserCommand extends Command {
 				});
 			}
 
-			erelaPLayer.connect();
-			erelaPLayer.textChannel = message.channel.id;
+			erelaPlayer.connect();
+			erelaPlayer.textChannel = message.channel.id;
 
 			if (result.loadType === 'PLAYLIST_LOADED') {
-				erelaPLayer.queue.add(result.tracks);
+				erelaPlayer.queue.add(result.tracks);
 
 				await this.container.client.sleep(1000);
 
@@ -99,13 +99,13 @@ export class UserCommand extends Command {
 					}
 				}
 
-				if (!erelaPLayer.playing && !erelaPLayer.paused && erelaPLayer.queue.totalSize === result.tracks.length) erelaPLayer.play();
+				if (!erelaPlayer.playing && !erelaPlayer.paused && erelaPlayer.queue.totalSize === result.tracks.length) erelaPlayer.play();
 
 				embedReply.setDescription(result.loadType === 'PLAYLIST_LOADED' ? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]` : `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			erelaPLayer.queue.add(result.tracks[0]);
+			erelaPlayer.queue.add(result.tracks[0]);
 
 			await this.container.client.sleep(1000);
 
@@ -120,7 +120,7 @@ export class UserCommand extends Command {
 				}
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
+			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
 
 			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
 			return message.reply({ embeds: [embedReply] });

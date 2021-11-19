@@ -21,7 +21,7 @@ export class UserCommand extends Command {
 	 */
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
-		const erelaPLayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
@@ -39,12 +39,12 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
+			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+			if (!erelaPlayer.playing && !erelaPlayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -52,24 +52,24 @@ export class UserCommand extends Command {
 			switch (loopMode) {
 				case 'track':
 				case 'current': {
-					erelaPLayer.setTrackRepeat(true);
+					erelaPlayer.setTrackRepeat(true);
 					embedReply.setDescription('Now looping the **current track**.');
 					break;
 				}
 				case 'all':
 				case 'queue': {
-					erelaPLayer.setQueueRepeat(true);
+					erelaPlayer.setQueueRepeat(true);
 					embedReply.setDescription('Now looping the **queue**.');
 					break;
 				}
 				case 'disable':
 				case 'off': {
-					if (erelaPLayer.trackRepeat) {
-						erelaPLayer.setTrackRepeat(false);
+					if (erelaPlayer.trackRepeat) {
+						erelaPlayer.setTrackRepeat(false);
 					}
 
-					if (erelaPLayer.queueRepeat) {
-						erelaPLayer.setQueueRepeat(false);
+					if (erelaPlayer.queueRepeat) {
+						erelaPlayer.setQueueRepeat(false);
 					}
 
 					embedReply.setDescription('Looping is now **disabled**.');
@@ -93,31 +93,31 @@ export class UserCommand extends Command {
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer) {
+				if (!erelaPlayer) {
 					embedReply.setDescription("There isn't an active player on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer.playing) {
+				if (!erelaPlayer.playing) {
 					embedReply.setDescription("There's nothing currently playing on this server!");
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (erelaPLayer.trackRepeat) {
-					erelaPLayer.setTrackRepeat(false);
-					erelaPLayer.setQueueRepeat(true);
+				if (erelaPlayer.trackRepeat) {
+					erelaPlayer.setTrackRepeat(false);
+					erelaPlayer.setQueueRepeat(true);
 					embedReply.setDescription('Now looping the **queue**.');
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (erelaPLayer.queueRepeat) {
-					erelaPLayer.setQueueRepeat(false);
+				if (erelaPlayer.queueRepeat) {
+					erelaPlayer.setQueueRepeat(false);
 					embedReply.setDescription('Looping is now **disabled**.');
 					return message.reply({ embeds: [embedReply] });
 				}
 
-				if (!erelaPLayer.trackRepeat && !erelaPLayer.queueRepeat) {
-					erelaPLayer.setTrackRepeat(true);
+				if (!erelaPlayer.trackRepeat && !erelaPlayer.queueRepeat) {
+					erelaPlayer.setTrackRepeat(true);
 					embedReply.setDescription('Now looping the **current track**.');
 					return message.reply({ embeds: [embedReply] });
 				}

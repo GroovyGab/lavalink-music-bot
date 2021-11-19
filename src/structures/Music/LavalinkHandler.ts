@@ -2,7 +2,6 @@ import { MessageEmbed } from 'discord.js';
 import { Manager } from 'erela.js';
 import type { MusicBotClient } from '../Client';
 import ErelaSpotify from 'erela.js-spotify';
-//import { table } from 'table';
 
 export class LavalinkHandler extends Manager {
 	embedReply: MessageEmbed;
@@ -11,6 +10,7 @@ export class LavalinkHandler extends Manager {
 		super({
 			nodes: [
 				{
+					identifier: 'NODE_1',
 					host: process.env.LAVALINK_HOST!,
 					port: parseInt(process.env.LAVALINK_PORT!),
 					password: process.env.LAVALINK_PASSWD,

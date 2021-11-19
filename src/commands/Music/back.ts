@@ -13,7 +13,7 @@ import { Message, MessageEmbed } from 'discord.js';
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
-		const erelaPLayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
@@ -29,28 +29,28 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer) {
+			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused) {
+			if (!erelaPlayer.playing && !erelaPlayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPLayer.queue.previous) {
+			if (!erelaPlayer.queue.previous) {
 				embedReply.setDescription("There's no previous song to go back to.");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (erelaPLayer.queue.current) {
-				erelaPLayer.queue.unshift(erelaPLayer.queue.current);
+			if (erelaPlayer.queue.current) {
+				erelaPlayer.queue.unshift(erelaPlayer.queue.current);
 			}
 
-			erelaPLayer.queue.unshift(erelaPLayer.queue.previous);
+			erelaPlayer.queue.unshift(erelaPlayer.queue.previous);
 
-			erelaPLayer.stop();
+			erelaPlayer.stop();
 
 			return message.react('👌');
 		} catch (error: any) {
