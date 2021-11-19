@@ -19,7 +19,7 @@ export class UserCommand extends Command {
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
 
 		try {
-			const volume = args.rest('float');
+			const volume = await args.rest('float');
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
