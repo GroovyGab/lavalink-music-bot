@@ -6,9 +6,8 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'disconnect',
-	aliases: ['leave'],
-	description: 'Disconnects the bot from your voice channel and clears the queue.',
+	name: 'fastforward',
+	description: 'Fast forwards the player by your specified amount; The default is 10 seconds.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {

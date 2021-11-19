@@ -6,9 +6,8 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'disconnect',
-	aliases: ['leave'],
-	description: 'Disconnects the bot from your voice channel and clears the queue.',
+	name: 'announce',
+	description: 'Toggles the announcing of "Now playing" messages.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
