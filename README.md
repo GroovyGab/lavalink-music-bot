@@ -37,14 +37,29 @@ rename the `.env.example` file in `src` to `.env`
 populate the `.env` file:
 
 ```
-DISCORD_TOKEN=super_secret_discord_token
-OWNERS=your_id
-PREFIX=whatever_u_want
+# Bot essentials
+DISCORD_TOKEN=
+OWNERS=
+PREFIX=
 
-# Default lavalink config
-LAVALINK_HOST=localhost
-LAVALINK_PORT=2333
-LAVALINK_PASSWD=youshallnotpass
+# Ignore this one for now
+DISCONNECT_DELAY=
+
+# Default lavalink cradentials
+LAVALINK_HOST=
+LAVALINK_PORT=
+LAVALINK_PASSWD=
+
+# For spotify support
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+
+# You can put whatever in these
+CLIENT_NAME=
+CLIENT_VERSION=
+
+# The default player's volume
+DEFAULT_VOLUME=
 ```
 
 compile the typescript files:
