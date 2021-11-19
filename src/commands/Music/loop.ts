@@ -34,6 +34,11 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
+			if (userVoiceChannel.id !== botVoiceChannel?.id) {
+				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
+				return message.reply({ embeds: [embedReply] });
+			}
+
 			if (!erelaPLayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });
@@ -41,11 +46,6 @@ export class UserCommand extends Command {
 
 			if (!erelaPLayer.playing && !erelaPLayer.paused) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
-				return message.reply({ embeds: [embedReply] });
-			}
-
-			if (userVoiceChannel.id !== botVoiceChannel?.id) {
-				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -88,6 +88,11 @@ export class UserCommand extends Command {
 					return message.reply({ embeds: [embedReply] });
 				}
 
+				if (userVoiceChannel.id !== botVoiceChannel?.id) {
+					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
+					return message.reply({ embeds: [embedReply] });
+				}
+
 				if (!erelaPLayer) {
 					embedReply.setDescription("There isn't an active player on this server!");
 					return message.reply({ embeds: [embedReply] });
@@ -95,11 +100,6 @@ export class UserCommand extends Command {
 
 				if (!erelaPLayer.playing) {
 					embedReply.setDescription("There's nothing currently playing on this server!");
-					return message.reply({ embeds: [embedReply] });
-				}
-
-				if (userVoiceChannel.id !== botVoiceChannel?.id) {
-					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 					return message.reply({ embeds: [embedReply] });
 				}
 
