@@ -1,6 +1,6 @@
 import type { ListenerOptions, PieceContext } from '@sapphire/framework';
 import { Events, Listener } from '@sapphire/framework';
-import { MessageEmbed, VoiceState } from 'discord.js';
+import type { /* MessageEmbed,*/ VoiceState } from 'discord.js';
 
 export class UserEvent extends Listener<typeof Events.VoiceStateUpdate> {
 	public constructor(context: PieceContext, options?: ListenerOptions) {
@@ -10,8 +10,9 @@ export class UserEvent extends Listener<typeof Events.VoiceStateUpdate> {
 		});
 	}
 
-	public run(oldState: VoiceState, _newState: VoiceState) {
-		const erelaPLayer = this.container.client.players.get(oldState.guild.id);
+	public run(_oldState: VoiceState, _newState: VoiceState) {
+		// This is a bad system
+		/*const erelaPLayer = this.container.client.players.get(oldState.guild.id);
 
 		if (erelaPLayer) {
 			const voiceChannel = this.container.client.channels.cache.get(erelaPLayer.voiceChannel!);
@@ -43,6 +44,6 @@ export class UserEvent extends Listener<typeof Events.VoiceStateUpdate> {
 					this.container.client.logger.info(`Inactivity disconnect timeout was cleared in guild ${guild?.name}[${guild?.id}]`);
 				}
 			}
-		}
+		}*/
 	}
 }
