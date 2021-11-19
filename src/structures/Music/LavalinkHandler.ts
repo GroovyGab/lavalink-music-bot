@@ -44,11 +44,7 @@ export class LavalinkHandler extends Manager {
 			.on('nodeError', (node, error) => client.logger.error(`[Lavalink] Node ${node.options.identifier} had an error: `, error))
 			.on('nodeDestroy', (node) => client.logger.error(`[Lavalink] Node "${node.options.identifier} was destroyed." `))
 			.on('nodeReconnect', (node) => client.logger.info(`[Lavalink] Node "${node.options.identifier} is reconnecting.`))
-			.on('nodeDisconnect', (node, reason) =>
-				client.logger.warn(
-					`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`
-				)
-			)
+			.on('nodeDisconnect', (node, reason) => client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`))
 			.on('playerCreate', (player) => {
 				const guild = client.guilds.cache.get(player.guild);
 				client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
@@ -72,43 +68,50 @@ export class LavalinkHandler extends Manager {
 				client.logger.info(`Queue ended in guild ${guild?.name}[${guild?.id}]`);
 				channel.send({ embeds: [this.embedReply] });
 			})
-			.on('playerMove', async (player, _initCHannel, newChannel) => {
+			.on('playerMove', async (player, _initCHannel, newVoiceChannel) => {
+				if (!player) return;
 				const guild = client.guilds.cache.get(player.guild);
+				const newChannelFetch = client.channels.cache.get(newVoiceChannel);
 
-				if (!newChannel) {
+				if (!newVoiceChannel) {
 					client.logger.info(`Player was disconnected from voice channel in guild ${guild?.name}[${guild?.id}]`);
 					player.destroy();
 				} else {
-					player.setVoiceChannel(newChannel);
+					player.setVoiceChannel(newVoiceChannel);
 					player.pause(true);
+
 					await client.sleep(1000);
+
 					player.pause(false);
-					client.logger.info(
-						`Player was moved from voice channel "${_initCHannel}" to "${newChannel}" in guild ${guild?.name}[${guild?.id}]`
-					);
+
+					if (!newChannelFetch || !newChannelFetch.isVoice()) return;
+
+					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
+						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
+						if (!newvCBotPermissions.has('MANAGE_CHANNELS') || !newvCBotPermissions.has('MUTE_MEMBERS') || !newvCBotPermissions.has('MOVE_MEMBERS')) {
+						} else {
+							newChannelFetch.guild.me!.voice.setSuppressed(false);
+						}
+					}
+
+					client.logger.info(`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`);
 				}
 			})
 			.on('trackStart', (player, track) => {
 				const guild = client.guilds.cache.get(player.guild);
 
-				client.logger.info(
-					`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
-				);
+				client.logger.info(`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
 			})
 			.on('trackEnd', (player, track) => {
 				const guild = client.guilds.cache.get(player.guild);
 
-				client.logger.info(
-					`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
-				);
+				client.logger.info(`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
 			})
 			.on('trackStuck', (player, track) => {
 				const guild = client.guilds.cache.get(player.guild);
 				const channel = client.channels.cache.get(player.textChannel!);
 
-				client.logger.warn(
-					`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`
-				);
+				client.logger.warn(`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`);
 
 				if (!channel?.isText()) return;
 
