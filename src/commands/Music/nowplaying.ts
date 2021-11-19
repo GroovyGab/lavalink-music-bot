@@ -51,7 +51,7 @@ export class UserCommand extends Command {
 
 			embedReply.setDescription(`[${trackInfo?.title}](${trackInfo?.uri}) [${trackInfo?.requester}]`).setFooter(embedFooter);
 			replyInteractionRow.addComponents(new MessageButton().setCustomId('url').setLabel('Url').setStyle('LINK').setURL(trackInfo?.uri!));
-			return message.reply({ embeds: [embedReply] });
+			return message.reply({ embeds: [embedReply], components: [replyInteractionRow] });
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
