@@ -49,6 +49,11 @@ export class UserCommand extends Command {
 			embedReply.setDescription(`The volume was changed to ${volume}%`);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
+			if (error.identifier === 'argsMissing') {
+				embedReply.setDescription('You need to provide a value!');
+				return message.reply({ embeds: [embedReply] });
+			}
+
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [embedReply] });
