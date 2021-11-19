@@ -93,6 +93,7 @@ export class UserCommand extends Command {
 			}
 
 			erelaPLayer.queue.add(result.tracks[0]);
+			"E"
 
 			await this.container.client.sleep(1000);
 			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
