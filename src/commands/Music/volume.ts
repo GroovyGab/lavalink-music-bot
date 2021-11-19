@@ -40,7 +40,10 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			return console.log(volume);
+			if (!volume || volume < 0 || volume > 200) {
+				embedReply.setDescription('The volume needs to be a value between 0 and 200.');
+				return message.reply({embeds:[embedReply]});
+			}
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
