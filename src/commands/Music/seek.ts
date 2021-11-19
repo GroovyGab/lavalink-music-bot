@@ -78,8 +78,7 @@ export class UserCommand extends Command {
 			}
 
 			erelaPLayer.seek(seekSeconds * 1000);
-
-			return message.reply(':(');
+			return message.react('👌');
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				embedReply.setDescription('You must specify the ammount of time to seek!');
