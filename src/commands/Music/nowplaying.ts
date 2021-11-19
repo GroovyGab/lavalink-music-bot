@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { splitBar } from 'string-progressbar';
 
 @ApplyOptions<CommandOptions>({
@@ -14,6 +14,7 @@ export class UserCommand extends Command {
 		if (!message.guild) return;
 		const erelaPLayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
+		const replyInteractionRow = new MessageActionRow();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
 		try {
@@ -49,6 +50,7 @@ export class UserCommand extends Command {
 			const embedFooter = trackIsStream ? trackProgress : `${splitProgressBar} ${trackProgress} / ${totalTrackLength}`;
 
 			embedReply.setDescription(`[${trackInfo?.title}](${trackInfo?.uri}) [${trackInfo?.requester}]`).setFooter(embedFooter);
+			replyInteractionRow.addComponents(new MessageButton().setCustomId('url').setLabel('Url').setStyle('LINK').setURL(trackInfo?.uri!));
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
