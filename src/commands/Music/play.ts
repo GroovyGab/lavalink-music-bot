@@ -98,11 +98,11 @@ export class UserCommand extends Command {
 			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
 
 			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-				if (!userVCBotPermissions.has('MANAGE_CHANNELS') || !userVCBotPermissions.has('MUTE_MEMBERS') || !userVCBotPermissions.has('MOVE_MEMBERS')) {
+				if (userVCBotPermissions.has('MANAGE_CHANNELS') || userVCBotPermissions.has('MUTE_MEMBERS') || userVCBotPermissions.has('MOVE_MEMBERS')) {
+					message.guild.me!.voice.setSuppressed(false);
+				} else {
 					warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
 					message.channel.send({ embeds: [warnEmbed] });
-				} else {
-					message.guild.me!.voice.setSuppressed(false);
 				}
 			}
 
