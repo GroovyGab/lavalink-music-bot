@@ -6,6 +6,7 @@ import ErelaSpotify from 'erela.js-spotify';
 
 export class LavalinkHandler extends Manager {
 	embedReply: MessageEmbed;
+	client: MusicBotClient;
 	constructor(client: MusicBotClient) {
 		super({
 			nodes: [
@@ -32,6 +33,7 @@ export class LavalinkHandler extends Manager {
 		});
 
 		this.embedReply = new MessageEmbed();
+		this.client = client;
 
 		this.on('nodeConnect', (node) => {
 			/*const statsData = [
@@ -39,56 +41,55 @@ export class LavalinkHandler extends Manager {
 				['', `${node.stats.cpu.systemLoad}%`, `${node.stats.cpu.lavalinkLoad}%`, node.stats.cpu.cores]
 			];
 			console.log(table(statsData));*/
-			client.logger.info(`[Lavalink] Node "${node.options.identifier}" is now connected.`);
+			this.client.logger.info(`[Lavalink] Node "${node.options.identifier}" is now connected.`);
 		})
-			.on('nodeCreate', (node) => client.logger.info(`[Lavalink] Node "${node.options.identifier} was created.`))
-			.on('nodeError', (node, error) => client.logger.error(`[Lavalink] Node ${node.options.identifier} had an error: `, error))
-			.on('nodeDestroy', (node) => client.logger.error(`[Lavalink] Node "${node.options.identifier} was destroyed." `))
-			.on('nodeReconnect', (node) => client.logger.info(`[Lavalink] Node "${node.options.identifier} is reconnecting.`))
-			.on('nodeDisconnect', (node, reason) => client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`))
+			.on('nodeCreate', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} was created.`))
+			.on('nodeError', (node, error) => this.client.logger.error(`[Lavalink] Node ${node.options.identifier} had an error: `, error))
+			.on('nodeDestroy', (node) => this.client.logger.error(`[Lavalink] Node "${node.options.identifier} was destroyed." `))
+			.on('nodeReconnect', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} is reconnecting.`))
+			.on('nodeDisconnect', (node, reason) => this.client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`))
 			.on('playerCreate', (player) => {
-				const guild = client.guilds.cache.get(player.guild);
-				client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
-				client.players.set(guild?.id!, player);
+				const guild = this.client.guilds.cache.get(player.guild);
+				this.client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
+				this.client.players.set(guild?.id!, player);
 			})
 			.on('playerDestroy', (player) => {
-				const guild = client.guilds.cache.get(player.guild);
-				client.logger.info(`Player was destroyed in guild ${guild?.name}[${guild?.id}]`);
-				client.players.delete(guild?.id!);
+				const guild = this.client.guilds.cache.get(player.guild);
+				this.client.logger.info(`Player was destroyed in guild ${guild?.name}[${guild?.id}]`);
+				this.client.players.delete(guild?.id!);
 			})
 			.on('queueEnd', (player) => {
 				if (!player.textChannel) return;
 
 				this.embedReply.setDescription('Queue has ended, feel free to add more songs using `%play`.');
 
-				const guild = client.guilds.cache.get(player.guild);
-				const channel = client.channels.cache.get(player.textChannel);
+				const guild = this.client.guilds.cache.get(player.guild);
+				const channel = this.client.channels.cache.get(player.textChannel);
 
 				if (!channel?.isText()) return;
 
-				client.logger.info(`Queue ended in guild ${guild?.name}[${guild?.id}]`);
+				this.client.logger.info(`Queue ended in guild ${guild?.name}[${guild?.id}]`);
 				channel.send({ embeds: [this.embedReply] });
 			})
 			.on('playerMove', async (player, _initCHannel, newVoiceChannel) => {
 				if (!player) return;
-				const guild = client.guilds.cache.get(player.guild);
-				const newChannelFetch = client.channels.cache.get(newVoiceChannel);
+				const guild = this.client.guilds.cache.get(player.guild);
+				const newChannelFetch = this.client.channels.cache.get(newVoiceChannel);
 
 				if (!newVoiceChannel) {
-					client.logger.info(`Player was disconnected from voice channel in guild ${guild?.name}[${guild?.id}]`);
+					this.client.logger.info(`Player was disconnected from voice channel in guild ${guild?.name}[${guild?.id}]`);
 					player.destroy();
 				} else {
 					player.setVoiceChannel(newVoiceChannel);
 					player.pause(true);
 
-					await client.sleep(1000);
+					await this.client.sleep(1000);
 
 					player.pause(false);
 
 					if (!newChannelFetch || !newChannelFetch.isVoice()) return;
 
 					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
-						console.log('HAndler');
 						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
 						if (!newvCBotPermissions.has('MANAGE_CHANNELS') || !newvCBotPermissions.has('MUTE_MEMBERS') || !newvCBotPermissions.has('MOVE_MEMBERS')) {
 						} else {
@@ -96,24 +97,24 @@ export class LavalinkHandler extends Manager {
 						}
 					}
 
-					client.logger.info(`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`);
+					this.client.logger.info(`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`);
 				}
 			})
 			.on('trackStart', (player, track) => {
-				const guild = client.guilds.cache.get(player.guild);
+				const guild = this.client.guilds.cache.get(player.guild);
 
-				client.logger.info(`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
+				this.client.logger.info(`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
 			})
 			.on('trackEnd', (player, track) => {
-				const guild = client.guilds.cache.get(player.guild);
+				const guild = this.client.guilds.cache.get(player.guild);
 
-				client.logger.info(`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
+				this.client.logger.info(`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
 			})
 			.on('trackStuck', (player, track) => {
-				const guild = client.guilds.cache.get(player.guild);
-				const channel = client.channels.cache.get(player.textChannel!);
+				const guild = this.client.guilds.cache.get(player.guild);
+				const channel = this.client.channels.cache.get(player.textChannel!);
 
-				client.logger.warn(`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`);
+				this.client.logger.warn(`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`);
 
 				if (!channel?.isText()) return;
 
@@ -124,10 +125,10 @@ export class LavalinkHandler extends Manager {
 				player.stop();
 			})
 			.on('trackError', (player, track) => {
-				const guild = client.guilds.cache.get(player.guild);
-				const channel = client.channels.cache.get(player.textChannel!);
+				const guild = this.client.guilds.cache.get(player.guild);
+				const channel = this.client.channels.cache.get(player.textChannel!);
 
-				client.logger.error(`Track "${track.title}" by "${track.author}" had an error during playback in guild ${guild?.name}[${guild?.id}]`);
+				this.client.logger.error(`Track "${track.title}" by "${track.author}" had an error during playback in guild ${guild?.name}[${guild?.id}]`);
 
 				if (!channel?.isText()) return;
 
@@ -138,9 +139,9 @@ export class LavalinkHandler extends Manager {
 				player.stop();
 			})
 			.on('socketClosed', (player) => {
-				const guild = client.guilds.cache.get(player.guild);
+				const guild = this.client.guilds.cache.get(player.guild);
 
-				client.logger.info(`The player's voice connection in guild ${guild?.name}[${guild?.id}] was updated.`);
+				this.client.logger.info(`The player's voice connection in guild ${guild?.name}[${guild?.id}] was updated.`);
 			});
 		/*.on('nodeRaw', console.log);*/ //This is for debugging.
 	}
