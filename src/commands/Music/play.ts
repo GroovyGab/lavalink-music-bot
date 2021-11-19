@@ -86,6 +86,19 @@ export class UserCommand extends Command {
 			if (result.loadType === 'PLAYLIST_LOADED') {
 				erelaPLayer.queue.add(result.tracks);
 
+				await this.container.client.sleep(1000);
+
+				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
+					const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
+					if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
+						message.guild.me!.voice.setSuppressed(false);
+						console.log('e');
+					} else {
+						warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
+						message.channel.send({ embeds: [warnEmbed] });
+					}
+				}
+
 				if (!erelaPLayer.playing && !erelaPLayer.paused && erelaPLayer.queue.totalSize === result.tracks.length) erelaPLayer.play();
 
 				embedReply.setDescription(result.loadType === 'PLAYLIST_LOADED' ? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]` : `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
@@ -96,26 +109,18 @@ export class UserCommand extends Command {
 
 			await this.container.client.sleep(1000);
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
-
 			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
 				const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
-				if (newvCBotPermissions.has('MANAGE_CHANNELS') || newvCBotPermissions.has('MUTE_MEMBERS') || newvCBotPermissions.has('MOVE_MEMBERS')) {
-					botVoiceChannel!.guild.me!.voice.setSuppressed(false);
+				if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
+					message.guild.me!.voice.setSuppressed(false);
+					console.log('e');
 				} else {
 					warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
 					message.channel.send({ embeds: [warnEmbed] });
 				}
 			}
 
-			/*if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-				if (userVCBotPermissions.has('MANAGE_CHANNELS') || userVCBotPermissions.has('MUTE_MEMBERS') || userVCBotPermissions.has('MOVE_MEMBERS')) {
-					message.guild.me!.voice.setSuppressed(false);
-				} else {
-					warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
-					message.channel.send({ embeds: [warnEmbed] });
-				}
-			}*/
+			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
 
 			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
 			return message.reply({ embeds: [embedReply] });
