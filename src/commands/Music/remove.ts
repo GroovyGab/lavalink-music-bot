@@ -2,12 +2,14 @@
  * Module imports.
  */
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
+import { Args, Command } from '@sapphire/framework';
+import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'lyrics',
-	description: 'Displays lyrics for the currently playing track or the one specified.',
+@ApplyOptions<SubCommandPluginCommandOptions>({
+	name: 'remove',
+	description: 'Removes the specified track from the queue.',
+	subCommands: ['range'],
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
@@ -21,4 +23,6 @@ export class UserCommand extends Command {
 			return message.reply({ embeds: [embedReply] });
 		}
 	}
+
+	public async range(_message: Message, _args: Args) {}
 }

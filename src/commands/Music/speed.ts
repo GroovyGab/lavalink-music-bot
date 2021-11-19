@@ -6,8 +6,8 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'lyrics',
-	description: 'Displays lyrics for the currently playing track or the one specified.',
+	name: 'speed',
+	description: 'Sets the player\'s playback speed; If you input "reset", it will set the speed back to default.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {

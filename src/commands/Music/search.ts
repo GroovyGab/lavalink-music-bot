@@ -6,8 +6,8 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'lyrics',
-	description: 'Displays lyrics for the currently playing track or the one specified.',
+	name: 'search',
+	description: 'Searches for your query on YouTube and lets you choose which songs to queue; To queue a track of the results, just type the number preceding it.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {

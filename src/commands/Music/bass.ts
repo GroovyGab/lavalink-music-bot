@@ -6,14 +6,28 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'lyrics',
-	description: 'Displays lyrics for the currently playing track or the one specified.',
+	name: 'bass',
+	description: 'Sets the player\'s bass boost setting; If you input "reset", it will disable bass boosting.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {
 		const embedReply = new MessageEmbed();
 		try {
+			if (!message.guild) return;
+			const erelaPLayer = this.container.client.players.get(message.guild.id);
+			const data = {
+				op: 'filters',
+				guildId: message.guild.id,
+				volume: 0.5,
+				equalizer: [
+					{ band: 1, gain: 0.3 },
+					{ band: 0, gain: 0.3 }
+				],
+				timescale: { pitch: 0.5 },
+				tremolo: { depth: 0.3, frequency: 14 }
+			};
+			await erelaPLayer?.node.send(data);
 			return message.reply(':(');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

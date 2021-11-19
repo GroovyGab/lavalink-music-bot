@@ -6,8 +6,9 @@ import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	name: 'lyrics',
-	description: 'Displays lyrics for the currently playing track or the one specified.',
+	name: 'song',
+	aliases: ['song-info'],
+	description: 'Displays info about the currently playing track.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
