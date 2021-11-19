@@ -106,7 +106,7 @@ export class UserCommand extends Command {
 				}
 			}
 
-			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+			embedReply.setDescription(`Queued XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
