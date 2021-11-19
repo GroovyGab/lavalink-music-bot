@@ -3,7 +3,7 @@
  */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed, Permissions } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 
 /**
  * Command options.
@@ -24,6 +24,7 @@ export class UserCommand extends Command {
 
 		let erelaPLayer = this.container.client.players.get(message.guild.id);
 		const embedReply = new MessageEmbed();
+		const warnEmbed = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
 
@@ -74,30 +75,37 @@ export class UserCommand extends Command {
 					guild: message.guild.id,
 					voiceChannel: message.member!.voice.channel!.id,
 					textChannel: message.channel.id,
-					volume: 5
+					selfDeafen: true,
+					volume: 10
 				});
 			}
 
 			erelaPLayer.connect();
 			erelaPLayer.textChannel = message.channel.id;
 
-			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-				this.becomeStageSpeaker(message, userVCBotPermissions);
+			if (result.loadType === 'PLAYLIST_LOADED') {
+				erelaPLayer.queue.add(result.tracks);
+
+				if (!erelaPLayer.playing && !erelaPLayer.paused && erelaPLayer.queue.totalSize === result.tracks.length) erelaPLayer.play();
+
+				embedReply.setDescription(result.loadType === 'PLAYLIST_LOADED' ? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]` : `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+				return message.reply({ embeds: [embedReply] });
 			}
 
 			erelaPLayer.queue.add(result.tracks[0]);
 
 			if (!erelaPLayer.playing && !erelaPLayer.paused && !erelaPLayer.queue.size) erelaPLayer.play();
 
-			if (!erelaPLayer.playing && !erelaPLayer.paused && erelaPLayer.queue.totalSize === result.tracks.length) erelaPLayer.play();
+			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
+				if (!userVCBotPermissions.has('MANAGE_CHANNELS') || !userVCBotPermissions.has('MUTE_MEMBERS') || !userVCBotPermissions.has('MOVE_MEMBERS')) {
+					warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
+					message.channel.send({ embeds: [warnEmbed] });
+				} else {
+					message.guild.me!.voice.setSuppressed(false);
+				}
+			}
 
-			embedReply.setDescription(
-				result.loadType === 'PLAYLIST_LOADED'
-					? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${
-							result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`
-					  } other tracks [${result.tracks[0].requester}]`
-					: `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`
-			);
+			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
@@ -109,19 +117,5 @@ export class UserCommand extends Command {
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [embedReply] });
 		}
-	}
-
-	private becomeStageSpeaker(message: Message, bot_permissions: Readonly<Permissions>) {
-		const $EMBED_REPLY = new MessageEmbed();
-
-		if (!bot_permissions.has('MANAGE_CHANNELS') || !bot_permissions.has('MUTE_MEMBERS') || !bot_permissions.has('MOVE_MEMBERS')) {
-			$EMBED_REPLY.setDescription(
-				"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
-			);
-
-			return message.channel.send({ embeds: [$EMBED_REPLY] });
-		}
-
-		return message.guild?.me?.voice.setSuppressed(false);
 	}
 }
