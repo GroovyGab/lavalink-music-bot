@@ -29,7 +29,6 @@ export class UserEvent extends Listener {
 		this.printBanner();
 		this.printStoreDebugInformation();
 		this.container.client.manager.init(this.container.client.id!);
-		this.container.client.user?.setActivity('**NO USAR ESTE BOT**');
 	}
 
 	private printBanner() {
