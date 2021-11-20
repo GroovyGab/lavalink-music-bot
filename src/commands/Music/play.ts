@@ -167,7 +167,7 @@ export class UserCommand extends Command {
 					newvCBotPermissions.has('MUTE_MEMBERS') &&
 					newvCBotPermissions.has('MOVE_MEMBERS')
 				) {
-					await this.container.client.sleep(1000);
+					//await this.container.client.sleep(1000);
 					message.guild.me!.voice.setSuppressed(false);
 					console.log('e');
 				} else {
