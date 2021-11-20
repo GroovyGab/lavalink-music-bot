@@ -37,7 +37,7 @@ export class UserCommand extends Command {
 			}
 
 			if (!erelaPlayer.queue.length) {
-				embedReply.setDescription(`${erelaPlayer.queue.current ? `__Now Playing:__\n${erelaPlayer.queue.current.title} - ${erelaPlayer.queue.current.requester}\n\n` : ''}The queue is empty.`);
+				embedReply.setDescription(`${erelaPlayer.queue.current ? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n` : ''}The queue is empty.`);
 				return message.reply({ embeds: [embedReply] });
 			}
 
