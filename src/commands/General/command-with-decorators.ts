@@ -1,26 +1,12 @@
-import {
-	ApplyOptions,
-	RequiresClientPermissions,
-	RequiresDMContext,
-	RequiresGuildContext
-} from '@sapphire/decorators';
+import { ApplyOptions, RequiresClientPermissions, RequiresDMContext, RequiresGuildContext } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
-import {
-	SubCommandPluginCommand,
-	SubCommandPluginCommandOptions
-} from '@sapphire/plugin-subcommands';
+import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	aliases: ['cwd'],
 	description: 'A basic command with some subcommands',
-	subCommands: [
-		'add',
-		{ input: 'create', output: 'add' },
-		'remove',
-		'reset',
-		{ input: 'show', default: true }
-	],
+	subCommands: ['add', { input: 'create', output: 'add' }, 'remove', 'reset', { input: 'show', default: true }],
 	preconditions: ['OwnerOnly']
 })
 export class UserCommand extends SubCommandPluginCommand {
@@ -40,16 +26,12 @@ export class UserCommand extends SubCommandPluginCommand {
 		return send(message, { embeds: [embed] });
 	}
 
-	@RequiresGuildContext((message: Message) =>
-		send(message, 'This sub-command can only be used in servers')
-	)
+	@RequiresGuildContext((message: Message) => send(message, 'This sub-command can only be used in servers'))
 	public async remove(message: Message) {
 		return send(message, 'Removing!');
 	}
 
-	@RequiresDMContext((message: Message) =>
-		send(message, 'This sub-command can only be used in DMs')
-	)
+	@RequiresDMContext((message: Message) => send(message, 'This sub-command can only be used in DMs'))
 	public async reset(message: Message) {
 		return send(message, 'Resetting!');
 	}

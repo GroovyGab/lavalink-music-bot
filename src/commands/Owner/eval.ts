@@ -24,9 +24,7 @@ export class UserCommand extends Command {
 			showHidden: args.getFlags('hidden', 'showHidden')
 		});
 
-		const output = success
-			? codeBlock('js', result)
-			: `**ERROR**: ${codeBlock('bash', result)}`;
+		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
 		if (args.getFlags('silent', 's')) return null;
 
 		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
@@ -41,11 +39,7 @@ export class UserCommand extends Command {
 		return send(message, `${output}\n${typeFooter}`);
 	}
 
-	private async eval(
-		message: Message,
-		code: string,
-		flags: { async: boolean; depth: number; showHidden: boolean }
-	) {
+	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.

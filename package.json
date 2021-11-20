@@ -51,6 +51,7 @@
 		"endOfLine": "lf",
 		"quoteProps": "as-needed",
 		"semi": true,
+		"printWidth": 10000,
 		"singleQuote": true,
 		"tabWidth": 4,
 		"trailingComma": "none",

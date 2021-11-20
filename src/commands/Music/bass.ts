@@ -7,8 +7,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'bass',
-	description:
-		'Sets the player\'s bass boost setting; If you input "reset", it will disable bass boosting.',
+	description: 'Sets the player\'s bass boost setting; If you input "reset", it will disable bass boosting.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
@@ -16,9 +15,7 @@ export class UserCommand extends Command {
 		const embedReply = new MessageEmbed();
 		try {
 			if (!message.guild) return;
-			const erelaPlayer = this.container.client.players.get(
-				message.guild.id
-			);
+			const erelaPlayer = this.container.client.players.get(message.guild.id);
 			const data = {
 				op: 'filters',
 				guildId: message.guild.id,
@@ -42,13 +39,8 @@ export class UserCommand extends Command {
 			await erelaPlayer?.node.send(data);
 			return message.reply(':(');
 		} catch (error: any) {
-			this.container.client.logger.error(
-				`There was an unexpected error in command "${this.name}"`,
-				error
-			);
-			embedReply.setDescription(
-				'There was an unexpected error while processing the command, try again later.'
-			);
+			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
+			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.reply({ embeds: [embedReply] });
 		}
 	}

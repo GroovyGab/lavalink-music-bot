@@ -9,16 +9,12 @@ export class CommandInteraction extends Listener {
 	async run(interaction: Interaction) {
 		if (!interaction.isCommand()) return;
 
-		const cmd = this.container.stores
-			.get('slashCommands')
-			.get(interaction.commandName);
+		const cmd = this.container.stores.get('slashCommands').get(interaction.commandName);
 		if (!cmd) return;
 
 		try {
 			await cmd.run(interaction);
-			this.container.logger.info(
-				`${interaction.user.id} ran slash command ${cmd.commandData.name}`
-			);
+			this.container.logger.info(`${interaction.user.id} ran slash command ${cmd.commandData.name}`);
 		} catch (e: any) {
 			this.container.logger.fatal(e);
 
@@ -28,12 +24,7 @@ export class CommandInteraction extends Listener {
 						content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\``,
 						ephemeral: true
 					})
-					.catch((e: any) =>
-						this.container.logger.fatal(
-							'An error occurred following up on an error',
-							e
-						)
-					);
+					.catch((e: any) => this.container.logger.fatal('An error occurred following up on an error', e));
 			}
 
 			if (interaction.deferred) {
@@ -41,12 +32,7 @@ export class CommandInteraction extends Listener {
 					.editReply({
 						content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\``
 					})
-					.catch((e: any) =>
-						console.error(
-							'An error occurred following up on an error',
-							e
-						)
-					);
+					.catch((e: any) => console.error('An error occurred following up on an error', e));
 			}
 
 			return interaction
@@ -54,12 +40,7 @@ export class CommandInteraction extends Listener {
 					content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\``,
 					ephemeral: true
 				})
-				.catch((e: any) =>
-					this.container.logger.fatal(
-						'An error occurred replying on an error',
-						e
-					)
-				);
+				.catch((e: any) => this.container.logger.fatal('An error occurred replying on an error', e));
 		}
 	}
 }

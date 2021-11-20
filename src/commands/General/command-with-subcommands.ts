@@ -1,21 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
-import {
-	SubCommandPluginCommand,
-	SubCommandPluginCommandOptions
-} from '@sapphire/plugin-subcommands';
+import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	aliases: ['cws'],
 	description: 'A basic command with some subcommands',
-	subCommands: [
-		'add',
-		{ input: 'create', output: 'add' },
-		'remove',
-		'reset',
-		{ input: 'show', default: true }
-	],
+	subCommands: ['add', { input: 'create', output: 'add' }, 'remove', 'reset', { input: 'show', default: true }],
 	preconditions: ['OwnerOnly']
 })
 export class UserCommand extends SubCommandPluginCommand {

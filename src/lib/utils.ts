@@ -19,10 +19,6 @@ export function pickRandom<T>(array: readonly T[]): T {
  */
 export function sendLoadingMessage(message: Message): Promise<typeof message> {
 	return send(message, {
-		embeds: [
-			new MessageEmbed()
-				.setDescription(pickRandom(RandomLoadingMessage))
-				.setColor('#FF0000')
-		]
+		embeds: [new MessageEmbed().setDescription(pickRandom(RandomLoadingMessage)).setColor('#FF0000')]
 	});
 }
