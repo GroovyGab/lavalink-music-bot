@@ -1,4 +1,8 @@
-import type { CommandSuccessPayload, ListenerOptions, PieceContext } from '@sapphire/framework';
+import type {
+	CommandSuccessPayload,
+	ListenerOptions,
+	PieceContext
+} from '@sapphire/framework';
 import { Command, Events, Listener, LogLevel } from '@sapphire/framework';
 import type { Logger } from '@sapphire/plugin-logger';
 import { cyan } from 'colorette';
@@ -16,12 +20,17 @@ export class UserEvent extends Listener<typeof Events.CommandSuccess> {
 		const shard = this.shard(message.guild?.shardId ?? 0);
 		const commandName = this.command(command);
 		const author = this.author(message.author);
-		const sentAt = message.guild ? this.guild(message.guild) : this.direct();
-		this.container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt}`);
+		const sentAt = message.guild
+			? this.guild(message.guild)
+			: this.direct();
+		this.container.logger.debug(
+			`${shard} - ${commandName} ${author} ${sentAt}`
+		);
 	}
 
 	public onLoad() {
-		this.enabled = (this.container.logger as Logger).level <= LogLevel.Debug;
+		this.enabled =
+			(this.container.logger as Logger).level <= LogLevel.Debug;
 		return super.onLoad();
 	}
 

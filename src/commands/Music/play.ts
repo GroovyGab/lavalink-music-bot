@@ -11,7 +11,8 @@ import { Message, MessageEmbed } from 'discord.js';
 @ApplyOptions<CommandOptions>({
 	name: 'play',
 	aliases: ['p'],
-	description: 'Loads your input and adds it to the queue; If there is no playing track, then it will start playing.',
+	description:
+		'Loads your input and adds it to the queue; If there is no playing track, then it will start playing.',
 	fullCategory: ['music']
 })
 export class UserCommand extends Command {
@@ -32,41 +33,66 @@ export class UserCommand extends Command {
 			const search = await args.rest('string');
 
 			if (!userVoiceChannel) {
-				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
+				embedReply.setDescription(
+					'You have to be connected to a voice channel before you can use this command!'
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && userVoiceChannel.id !== botVoiceChannel?.id) {
-				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
+				embedReply.setDescription(
+					'You need to be in the same voice channel as the bot before you can use this command!'
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
+			const userVCBotPermissions = userVoiceChannel.permissionsFor(
+				message.guild.me!
+			);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
-				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
+				embedReply.setDescription(
+					'The "Connect" permission is needed in order to play music in the voice channel!'
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (!userVCBotPermissions.has('SPEAK')) {
-				embedReply.setDescription('The "Speak" permission is needed in order to play music in the voice channel!');
+				embedReply.setDescription(
+					'The "Speak" permission is needed in order to play music in the voice channel!'
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const result = await this.container.client.manager.search(search, message.author);
+			const result = await this.container.client.manager.search(
+				search,
+				message.author
+			);
 
 			if (result.loadType === 'NO_MATCHES') {
-				embedReply.setDescription("Couldn't find a result for the given search term!");
+				embedReply.setDescription(
+					"Couldn't find a result for the given search term!"
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			if (result.loadType === 'LOAD_FAILED') {
-				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load that track!');
+				embedReply.setDescription(
+					result.exception?.message
+						? result.exception?.message
+						: 'Failed to load that track!'
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (result.loadType === 'PLAYLIST_LOADED' && result.playlist && result.playlist?.duration <= 0) {
-				embedReply.setDescription("That playlist's duration is too small!");
+			if (
+				result.loadType === 'PLAYLIST_LOADED' &&
+				result.playlist &&
+				result.playlist?.duration <= 0
+			) {
+				embedReply.setDescription(
+					"That playlist's duration is too small!"
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -89,19 +115,42 @@ export class UserCommand extends Command {
 				await this.container.client.sleep(1000);
 
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-					const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
-					if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
+					const newvCBotPermissions = userVoiceChannel.permissionsFor(
+						message.guild.me!
+					);
+					if (
+						newvCBotPermissions.has('MANAGE_CHANNELS') &&
+						newvCBotPermissions.has('MUTE_MEMBERS') &&
+						newvCBotPermissions.has('MOVE_MEMBERS')
+					) {
 						message.guild.me!.voice.setSuppressed(false);
 						console.log('e');
 					} else {
-						warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
+						warnEmbed.setDescription(
+							"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
+						);
 						message.channel.send({ embeds: [warnEmbed] });
 					}
 				}
 
-				if (!erelaPlayer.playing && !erelaPlayer.paused && erelaPlayer.queue.totalSize === result.tracks.length) erelaPlayer.play();
+				if (
+					!erelaPlayer.playing &&
+					!erelaPlayer.paused &&
+					erelaPlayer.queue.totalSize === result.tracks.length
+				)
+					erelaPlayer.play();
 
-				embedReply.setDescription(result.loadType === 'PLAYLIST_LOADED' ? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]` : `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+				embedReply.setDescription(
+					result.loadType === 'PLAYLIST_LOADED'
+						? `Queued [${result.tracks[0].title}](${
+								result.tracks[0].uri
+						  }) and ${
+								result.tracks.length - 1 <= 0
+									? '**no**'
+									: `**${result.tracks.length - 1}**`
+						  } other tracks [${result.tracks[0].requester}]`
+						: `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`
+				);
 				return message.reply({ embeds: [embedReply] });
 			}
 
@@ -110,19 +159,34 @@ export class UserCommand extends Command {
 			await this.container.client.sleep(1000);
 
 			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-				const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
-				if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
+				const newvCBotPermissions = userVoiceChannel.permissionsFor(
+					message.guild.me!
+				);
+				if (
+					newvCBotPermissions.has('MANAGE_CHANNELS') &&
+					newvCBotPermissions.has('MUTE_MEMBERS') &&
+					newvCBotPermissions.has('MOVE_MEMBERS')
+				) {
 					message.guild.me!.voice.setSuppressed(false);
 					console.log('e');
 				} else {
-					warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
+					warnEmbed.setDescription(
+						"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
+					);
 					message.channel.send({ embeds: [warnEmbed] });
 				}
 			}
 
-			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
+			if (
+				!erelaPlayer.playing &&
+				!erelaPlayer.paused &&
+				!erelaPlayer.queue.size
+			)
+				erelaPlayer.play();
 
-			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+			embedReply.setDescription(
+				`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`
+			);
 			return message.reply({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
@@ -130,8 +194,13 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
-			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
+			this.container.client.logger.error(
+				`There was an unexpected error in command "${this.name}"`,
+				error
+			);
+			embedReply.setDescription(
+				'There was an unexpected error while processing the command, try again later.'
+			);
 			return message.reply({ embeds: [embedReply] });
 		}
 	}

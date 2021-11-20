@@ -19,7 +19,9 @@ export class SlashCommandStore extends Store<SlashCommand> {
 
 		// This will split the slash commands between global and guild only.
 		const slashCommands = this.container.stores.get('slashCommands');
-		const [guildCmds, globalCmds] = slashCommands?.partition((c) => c.guildOnly);
+		const [guildCmds, globalCmds] = slashCommands?.partition(
+			(c) => c.guildOnly
+		);
 
 		// iterate to all connected guilds and apply the commands.
 		const guilds = await client?.guilds?.fetch(); // retrieves Snowflake & Oauth2Guilds
@@ -32,11 +34,15 @@ export class SlashCommandStore extends Store<SlashCommand> {
 		// https://canary.discord.com/developers/docs/interactions/slash-commands#registering-a-command
 		// https://discord.com/developers/docs/interactions/application-commands#making-a-global-command
 		if (process.env.NODE_ENV === 'development') {
-			this.container.logger.info("Skipped global commands because we're in development mode");
+			this.container.logger.info(
+				"Skipped global commands because we're in development mode"
+			);
 			return;
 		}
 
 		// This will register global commands.
-		await client?.application?.commands.set(globalCmds.map((c: SlashCommand) => c.commandData));
+		await client?.application?.commands.set(
+			globalCmds.map((c: SlashCommand) => c.commandData)
+		);
 	}
 }

@@ -1,6 +1,14 @@
 import type { ListenerOptions, PieceContext } from '@sapphire/framework';
 import { Listener, Store } from '@sapphire/framework';
-import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
+import {
+	blue,
+	gray,
+	green,
+	magenta,
+	magentaBright,
+	white,
+	yellow
+} from 'colorette';
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -15,7 +23,9 @@ export class UserEvent extends Listener {
 	}
 
 	public async run() {
-		this.container.logger.info(`Client ready; Logged in as ${this.container.client.user?.tag} (${this.container.client.user?.id})`);
+		this.container.logger.info(
+			`Client ready; Logged in as ${this.container.client.user?.tag} (${this.container.client.user?.id})`
+		);
 		this.printBanner();
 		this.printStoreDebugInformation();
 		this.container.client.manager.init(this.container.client.id!);
@@ -39,7 +49,13 @@ export class UserEvent extends Listener {
 			String.raw`
 ${line01} ${pad}${blc('1.0.0')}
 ${line02} ${pad}[${success}] Gateway
-${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''}
+${line03}${
+				dev
+					? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc(
+							'DEVELOPMENT MODE'
+					  )}`
+					: ''
+			}
 		`.trim()
 		);
 	}
@@ -54,6 +70,10 @@ ${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MO
 	}
 
 	private styleStore(store: Store<any>, last: boolean) {
-		return gray(`${last ? '└─' : '├─'} Loaded ${this.style(store.size.toString().padEnd(3, ' '))} ${store.name}.`);
+		return gray(
+			`${last ? '└─' : '├─'} Loaded ${this.style(
+				store.size.toString().padEnd(3, ' ')
+			)} ${store.name}.`
+		);
 	}
 }

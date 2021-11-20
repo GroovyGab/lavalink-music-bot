@@ -1,6 +1,10 @@
 import { Piece, PieceContext } from '@sapphire/framework';
 import type { Awaitable } from '@sapphire/utilities';
-import type { ApplicationCommandData, ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import type {
+	ApplicationCommandData,
+	ApplicationCommandOptionData,
+	CommandInteraction
+} from 'discord.js';
 
 export abstract class SlashCommand extends Piece {
 	public readonly commandData: Options;
