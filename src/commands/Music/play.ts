@@ -156,7 +156,7 @@ export class UserCommand extends Command {
 
 			erelaPlayer.queue.add(result.tracks[0]);
 
-			await this.container.client.sleep(1000);
+			//await this.container.client.sleep(1000);
 
 			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
 				const newvCBotPermissions = userVoiceChannel.permissionsFor(
