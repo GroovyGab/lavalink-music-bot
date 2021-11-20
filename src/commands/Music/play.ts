@@ -104,16 +104,9 @@ export class UserCommand extends Command {
 					selfDeafen: true,
 					volume: 10
 				});
-			}
-
-			erelaPlayer.connect();
-			erelaPlayer.textChannel = message.channel.id;
-
-			if (result.loadType === 'PLAYLIST_LOADED') {
-				erelaPlayer.queue.add(result.tracks);
+				erelaPlayer.connect();
 
 				await this.container.client.sleep(1000);
-
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
 					const newvCBotPermissions = userVoiceChannel.permissionsFor(
 						message.guild.me!
@@ -132,6 +125,14 @@ export class UserCommand extends Command {
 						message.channel.send({ embeds: [warnEmbed] });
 					}
 				}
+			}
+
+			erelaPlayer.textChannel = message.channel.id;
+
+			if (result.loadType === 'PLAYLIST_LOADED') {
+				erelaPlayer.queue.add(result.tracks);
+
+				await this.container.client.sleep(1000);
 
 				if (
 					!erelaPlayer.playing &&
@@ -155,28 +156,6 @@ export class UserCommand extends Command {
 			}
 
 			erelaPlayer.queue.add(result.tracks[0]);
-
-			//await this.container.client.sleep(1000);
-
-			if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-				const newvCBotPermissions = userVoiceChannel.permissionsFor(
-					message.guild.me!
-				);
-				if (
-					newvCBotPermissions.has('MANAGE_CHANNELS') &&
-					newvCBotPermissions.has('MUTE_MEMBERS') &&
-					newvCBotPermissions.has('MOVE_MEMBERS')
-				) {
-					//await this.container.client.sleep(1000);
-					message.guild.me!.voice.setSuppressed(false);
-					console.log('e');
-				} else {
-					warnEmbed.setDescription(
-						"The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically."
-					);
-					message.channel.send({ embeds: [warnEmbed] });
-				}
-			}
 
 			if (
 				!erelaPlayer.playing &&
