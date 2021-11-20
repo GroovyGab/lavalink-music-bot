@@ -44,7 +44,7 @@ export class UserCommand extends Command {
 			/**
 			 * This is a mess but it works
 			 */
-			const trackNamesArr = erelaPlayer?.queue.map((track, i) => `\`${i + 1}.\` ${track.title} - [${track.requester}]`);
+			const trackNamesArr = erelaPlayer?.queue.map((track, i) => `\`${i + 1}.\` [${track.title}](${track.uri}) - [${track.requester}]`);
 
 			const trackNameArrChunks = trackNamesArr.reduce((resultArray: string[][], item, index) => {
 				const chunkIndex = Math.floor(index / 10);
