@@ -7,7 +7,6 @@ import type { SlashCommandStore } from './structures/SlashCommands/SlashCommandS
 declare module 'discord.js' {
 	interface Client {
 		manager: LavalinkHandler;
-		players: Collection<string, Player>;
 		timeouts: Collection<string, NodeJS.Timeout>;
 		sleep(ms: number): Promise<unknown>;
 	}

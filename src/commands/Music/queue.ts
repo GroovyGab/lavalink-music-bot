@@ -15,7 +15,7 @@ export class UserCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.guild) return;
-		const erelaPlayer = this.container.client.players.get(message.guild.id);
+		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;
 		const { channel: botVoiceChannel } = message.guild.me?.voice!;
@@ -66,7 +66,7 @@ export class UserCommand extends Command {
 				template: new MessageEmbed()
 			});
 
-			queueTextArrr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - ${erelaPlayer.queue.current?.requester}\n\n${textChunk[0]}`)));
+			queueTextArrr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
 			return await paginatedMessage.run(message, message.author);
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

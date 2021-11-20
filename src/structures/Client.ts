@@ -18,7 +18,6 @@ export class MusicBotClient extends SapphireClient {
 
 		this.validate();
 		this.manager = new LavalinkHandler(this);
-		this.players = new Collection();
 		this.timeouts = new Collection();
 		this.stores.register(new SlashCommandStore());
 	}

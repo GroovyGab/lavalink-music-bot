@@ -22,7 +22,7 @@ export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
 
-		let erelaPlayer = this.container.client.players.get(message.guild.id);
+		let erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const warnEmbed = new MessageEmbed();
 		const { channel: userVoiceChannel } = message.member?.voice!;

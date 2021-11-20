@@ -15,7 +15,7 @@ export class UserCommand extends Command {
 		const embedReply = new MessageEmbed();
 		try {
 			if (!message.guild) return;
-			const erelaPlayer = this.container.client.players.get(message.guild.id);
+			const erelaPlayer = this.container.client.manager.get(message.guild.id);
 			const data = {
 				op: 'filters',
 				guildId: message.guild.id,

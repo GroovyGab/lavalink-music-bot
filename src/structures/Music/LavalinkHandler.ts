@@ -51,12 +51,10 @@ export class LavalinkHandler extends Manager {
 			.on('playerCreate', (player) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 				this.client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
-				this.client.players.set(guild?.id!, player);
 			})
 			.on('playerDestroy', (player) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 				this.client.logger.info(`Player was destroyed in guild ${guild?.name}[${guild?.id}]`);
-				this.client.players.delete(guild?.id!);
 			})
 			.on('queueEnd', (player) => {
 				if (!player.textChannel) return;
