@@ -19,7 +19,7 @@ export class SeekCommand extends Command {
 		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const userVoiceChannel = message.member.voice.channel;
-		const botVoiceChannel = message.guild.me.voice;
+		const botVoiceChannel = message.guild.me.voice.channel;
 		const formatValidator = /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/g;
 
 		try {
