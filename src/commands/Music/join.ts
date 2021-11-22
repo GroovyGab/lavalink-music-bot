@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
@@ -11,7 +8,7 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Joins your current voice channel.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class JoinCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.member) return;
@@ -19,7 +16,7 @@ export class UserCommand extends Command {
 
 		let erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member.voice;
+		const userVoiceChannel = message.member.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
@@ -32,7 +29,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
+			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
 				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
@@ -46,12 +43,13 @@ export class UserCommand extends Command {
 
 			erelaPlayer = this.container.client.manager.create({
 				guild: message.guild.id,
-				voiceChannel: message.member!.voice.channel!.id,
+				voiceChannel: message.member.voice.channel.id,
 				textChannel: message.channel.id,
 				selfDeafen: true,
 				volume: 10
 			});
 			erelaPlayer.connect();
+
 			return message.react('👌');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

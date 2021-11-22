@@ -10,8 +10,12 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Stops the currently playing track and returns to the beginning of the queue.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class StopCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
 		try {
 			return message.reply(':(');

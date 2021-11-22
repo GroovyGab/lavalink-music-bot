@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
@@ -11,7 +8,7 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Disconnects the bot from your voice channel and clears the queue.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class DisconectCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.member) return;
@@ -28,7 +25,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}

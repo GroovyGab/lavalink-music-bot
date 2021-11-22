@@ -10,9 +10,14 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Sets the player\'s pitch; If you input "reset", it will set the pitch back to default.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class PitchCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
+
 		try {
 			return message.reply(':(');
 		} catch (error: any) {

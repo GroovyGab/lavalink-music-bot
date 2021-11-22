@@ -14,21 +14,23 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Resume your currently playing track.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class UnpauseCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member?.voice!;
-		const { channel: botVoiceChannel } = message.guild.me?.voice!;
+		const userVoiceChannel = message.member.voice.channel;
+		const botVoiceChannel = message.guild.me.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
-
-			if (userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -49,6 +51,7 @@ export class UserCommand extends Command {
 			}
 
 			erelaPlayer.pause(false);
+
 			return message.react('⏸️');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

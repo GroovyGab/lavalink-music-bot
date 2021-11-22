@@ -10,9 +10,14 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Move a song to another position in the queue.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class MoveCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
+
 		try {
 			return message.reply(':(');
 		} catch (error: any) {

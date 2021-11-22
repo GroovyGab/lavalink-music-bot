@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
@@ -10,9 +7,14 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Toggles 24/7 mode, which disables automatic inactivity-based disconnects.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class TwentyFourSevenCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
+		
 		try {
 			return message.reply(':(');
 		} catch (error: any) {

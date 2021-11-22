@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
@@ -10,13 +7,16 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Skips to the previous song.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class BackCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member?.voice!;
-		const { channel: botVoiceChannel } = message.guild.me?.voice!;
+		const { channel: userVoiceChannel } = message.member.voice;
+		const { channel: botVoiceChannel } = message.guild.me.voice;
 
 		try {
 			if (!userVoiceChannel) {
@@ -24,7 +24,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (erelaPlayer && userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -34,7 +34,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPlayer.playing && !erelaPlayer.paused) {
+			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -49,7 +49,6 @@ export class UserCommand extends Command {
 			}
 
 			erelaPlayer.queue.unshift(erelaPlayer.queue.previous);
-
 			erelaPlayer.stop();
 
 			return message.react('👌');

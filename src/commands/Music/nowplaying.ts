@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import { splitBar } from 'string-progressbar';
 
 @ApplyOptions<CommandOptions>({
@@ -9,21 +9,24 @@ import { splitBar } from 'string-progressbar';
 	description: 'Shows the currently playing track.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class NowplayingCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
-		const replyInteractionRow = new MessageActionRow();
-		const { channel: userVoiceChannel } = message.member?.voice!;
-		const { channel: botVoiceChannel } = message.guild.me?.voice!;
+		const userVoiceChannel = message.member.voice.channel;
+		const botVoiceChannel = message.guild.me.voice.channel;
+
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
@@ -33,14 +36,14 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (!erelaPlayer.playing && !erelaPlayer.paused) {
+			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const trackIsStream = erelaPlayer.queue.current?.isStream;
+			const trackIsStream = erelaPlayer.queue.current.isStream;
 			const trackPosition = erelaPlayer.position;
-			const trackLength = erelaPlayer.queue.current?.duration!;
+			const trackLength = erelaPlayer.queue.current.duration!;
 
 			const trackInfo = erelaPlayer.queue.current;
 			const splitProgressBar = trackIsStream ? '' : splitBar(trackLength, trackPosition, 20, '▬', '🔵')[0];
@@ -49,11 +52,10 @@ export class UserCommand extends Command {
 			const totalTrackLength = trackIsStream ? '' : `${this.msToHMS(trackLength)}`;
 			const embedFooter = trackIsStream ? trackProgress : `${splitProgressBar} ${trackProgress} / ${totalTrackLength}`;
 
-			embedReply.setDescription(`[${trackInfo?.title}](${trackInfo?.uri}) [${trackInfo?.requester}]`).setFooter(embedFooter);
-			replyInteractionRow.addComponents(new MessageButton().setLabel('Link').setStyle('LINK').setURL(trackInfo?.uri!));
+			embedReply.setDescription(`[${trackInfo.title}](${trackInfo.uri}) [${trackInfo.requester}]`).setFooter(embedFooter);
+
 			return message.reply({
-				embeds: [embedReply],
-				components: [replyInteractionRow]
+				embeds: [embedReply]
 			});
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

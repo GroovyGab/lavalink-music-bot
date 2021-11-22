@@ -10,8 +10,12 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Toggles vaporwave mode.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class VaporwaveCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
 		try {
 			if (!message.guild) return;

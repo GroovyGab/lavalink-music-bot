@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
@@ -10,10 +7,14 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Sets the player\'s bass boost setting; If you input "reset", it will disable bass boosting.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class BassBoostCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
+		
 		try {
 			const erelaPlayer = this.container.client.manager.get(message.guild.id);
 			const data = {

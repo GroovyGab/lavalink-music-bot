@@ -10,11 +10,15 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Toggles nightcore mode.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class NightcoreCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
+
 		try {
-			if (!message.guild) return;
 			const erelaPlayer = this.container.client.manager.get(message.guild.id);
 			const data = {
 				op: 'filters',

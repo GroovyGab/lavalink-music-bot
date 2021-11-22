@@ -10,8 +10,12 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Rewinds the player by your specified amount; The default is 10 seconds',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class RewindCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const embedReply = new MessageEmbed();
 		try {
 			return message.reply(':(');

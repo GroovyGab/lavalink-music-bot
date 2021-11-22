@@ -1,6 +1,3 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { Command, CommandOptions } from '@sapphire/framework';
@@ -11,14 +8,16 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Shows the music queue.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
+export class QueueCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
-		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
+
 		const erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member?.voice!;
-		const { channel: botVoiceChannel } = message.guild.me?.voice!;
+		const userVoiceChannel = message.member.voice.channel;
+		const botVoiceChannel = message.guild.me.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
@@ -26,7 +25,7 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}

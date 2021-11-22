@@ -1,24 +1,14 @@
-/**
- * Module imports.
- */
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
 
-/**
- * Command options.
- */
 @ApplyOptions<CommandOptions>({
 	name: 'play',
 	aliases: ['p'],
 	description: 'Loads your input and adds it to the queue; If there is no playing track, then it will start playing.',
 	fullCategory: ['music']
 })
-export class UserCommand extends Command {
-	/**
-	 * The main command method.
-	 * @returns
-	 */
+export class PlayCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
 		if (!message.member) return;
@@ -27,8 +17,8 @@ export class UserCommand extends Command {
 		let erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const warnEmbed = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member.voice;
-		const { channel: botVoiceChannel } = message.guild.me.voice;
+		const userVoiceChannel = message.member.voice.channel;
+		const botVoiceChannel = message.guild.me.voice.channel;
 
 		try {
 			const search = await args.rest('string');
@@ -38,12 +28,12 @@ export class UserCommand extends Command {
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			if (erelaPlayer && userVoiceChannel.id !== botVoiceChannel?.id) {
+			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
-			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
+			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
 				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
@@ -75,7 +65,7 @@ export class UserCommand extends Command {
 			if (!erelaPlayer) {
 				erelaPlayer = this.container.client.manager.create({
 					guild: message.guild.id,
-					voiceChannel: message.member!.voice.channel!.id,
+					voiceChannel: message.member.voice.channel.id,
 					textChannel: message.channel.id,
 					selfDeafen: true,
 					volume: 10
@@ -83,11 +73,12 @@ export class UserCommand extends Command {
 				erelaPlayer.connect();
 
 				await this.container.client.sleep(1000);
+
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-					const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me!);
+					const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
+
 					if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
-						message.guild.me!.voice.setSuppressed(false);
-						console.log('e');
+						message.guild.me.voice.setSuppressed(false);
 					} else {
 						warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
 						message.channel.send({ embeds: [warnEmbed] });
@@ -104,12 +95,11 @@ export class UserCommand extends Command {
 
 				if (!erelaPlayer.playing && !erelaPlayer.paused && erelaPlayer.queue.totalSize === result.tracks.length) erelaPlayer.play();
 
-				embedReply.setDescription(result.loadType === 'PLAYLIST_LOADED' ? `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]` : `Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+				embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]`);
 				return message.reply({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.queue.add(result.tracks[0]);
-
 			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
 
 			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
