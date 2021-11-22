@@ -21,12 +21,14 @@ export class UserCommand extends Command {
 	 */
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild) return;
+		if (!message.member) return;
+		if (!message.guild.me) return;
 
 		let erelaPlayer = this.container.client.manager.get(message.guild.id);
 		const embedReply = new MessageEmbed();
 		const warnEmbed = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member?.voice!;
-		const { channel: botVoiceChannel } = message.guild.me?.voice!;
+		const { channel: userVoiceChannel } = message.member.voice;
+		const { channel: botVoiceChannel } = message.guild.me.voice;
 
 		try {
 			const search = await args.rest('string');
@@ -61,7 +63,7 @@ export class UserCommand extends Command {
 			}
 
 			if (result.loadType === 'LOAD_FAILED') {
-				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load that track!');
+				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load one or more tracks!');
 				return message.reply({ embeds: [embedReply] });
 			}
 
