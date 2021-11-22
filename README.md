@@ -2,14 +2,14 @@
 
 I made this bot because, well, groovy was taken down, so I made my own clone.
 
-It's written in TypeScript and [Discord.js V13](), uses [Lavalink](https://github.com/freyacodes/Lavalink) for stable audio playback and [erela.js](https://github.com/MenuDocs/erela.js) as It's wrapper, it also uses the [Sapphire Framework for Discord bots](https://github.com/sapphiredev/framework/).
+It's written in TypeScript and [Discord.js V13](https://github.com/discordjs/discord.js/), uses [Lavalink](https://github.com/freyacodes/Lavalink) for stable audio playback and [erela.js](https://github.com/MenuDocs/erela.js) as It's wrapper, it also uses the [Sapphire Framework for Discord bots](https://github.com/sapphiredev/framework/).
 
 ## Requirements
 
 1. Node.js 16.1.x
 2. Java version 13 or higher (For Lavalink).
 3. Lavalink (Get it from [here](https://github.com/freyacodes/Lavalink/releases))
-4. Spotify API Client ID, and Client Secret. (Get the from [here](https://developer.spotify.com/dashboard/applications))
+4. Spotify API Client ID, and Client Secret. (Get them from [here](https://developer.spotify.com/dashboard/applications))
 5. A Discord bot token
 
 ## Self-hosting guide
