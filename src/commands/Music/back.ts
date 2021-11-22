@@ -4,6 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'back',
+	aliases: ['previous'],
 	description: 'Skips to the previous song.',
 	fullCategory: ['music']
 })

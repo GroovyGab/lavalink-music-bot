@@ -4,6 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'clear',
+	aliases: ['clear-queue', 'delete-queue'],
 	description: 'Removes all tracks from the queue.',
 	fullCategory: ['music']
 })
@@ -28,7 +29,7 @@ export class ClearCommand extends Command {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
 				return message.reply({ embeds: [embedReply] });
 			}
-			
+
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
 				return message.reply({ embeds: [embedReply] });

@@ -4,6 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'jump',
+	aliases: ['skipto', 'jumpto'],
 	description: 'Skips to the specified track.',
 	fullCategory: ['music']
 })

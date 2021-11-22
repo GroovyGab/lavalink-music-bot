@@ -4,7 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'join',
-	aliases: ['connect'],
+	aliases: ['connect', 'join-voice', 'join-voice-channel'],
 	description: 'Joins your current voice channel.',
 	fullCategory: ['music']
 })

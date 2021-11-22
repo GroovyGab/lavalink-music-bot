@@ -4,7 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'disconnect',
-	aliases: ['leave'],
+	aliases: ['leave', 'leave-channel', 'fuckoff'],
 	description: 'Disconnects the bot from your voice channel and clears the queue.',
 	fullCategory: ['music']
 })

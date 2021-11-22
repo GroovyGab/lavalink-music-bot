@@ -4,7 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'loop',
-	aliases: ['repeat'],
+	aliases: ['repeat', 'queue-repeat', 'queue-loop'],
 	description: 'Starts looping your currently playing track or the whole queue.',
 	fullCategory: ['music']
 })
