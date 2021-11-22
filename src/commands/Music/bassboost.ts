@@ -12,14 +12,30 @@ import { Message, MessageEmbed } from 'discord.js';
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!message.guild) return;
 		const embedReply = new MessageEmbed();
 		try {
-			if (!message.guild) return;
 			const erelaPlayer = this.container.client.manager.get(message.guild.id);
 			const data = {
 				op: 'filters',
 				guildId: message.guild.id,
 				equalizer: [
+					{ band: 0, gain: 0.3 },
+					{ band: 1, gain: 0.335 },
+					{ band: 2, gain: 0.335 },
+					{ band: 3, gain: 0 },
+					{ band: 4, gain: -0.25 },
+					{ band: 5, gain: 0.075 },
+					{ band: 6, gain: -0.225 },
+					{ band: 7, gain: 0.115 },
+					{ band: 8, gain: 0.175 },
+					{ band: 9, gain: 0.225 },
+					{ band: 10, gain: 0.275 },
+					{ band: 11, gain: 0.3 },
+					{ band: 12, gain: 0.275 },
+					{ band: 13, gain: 0 }
+				]
+				/*equalizer: [
 					{ band: 0, gain: 0.6 },
 					{ band: 1, gain: 0.67 },
 					{ band: 2, gain: 0.67 },
@@ -34,10 +50,10 @@ export class UserCommand extends Command {
 					{ band: 11, gain: 0.6 },
 					{ band: 12, gain: 0.55 },
 					{ band: 13, gain: 0 }
-				]
+				]*/
 			};
 			await erelaPlayer?.node.send(data);
-			return message.reply(':(');
+			return message.react('🔊');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
