@@ -2,7 +2,7 @@
 
 I made this bot because, well, groovy was taken down, so I made my own clone.
 
-It's written in TypeScript and [Discord.js V13](https://github.com/discordjs/discord.js/), uses [Lavalink](https://github.com/freyacodes/Lavalink) for stable audio playback and [erela.js](https://github.com/MenuDocs/erela.js) as It's wrapper, it also uses the [Sapphire Framework for Discord bots](https://github.com/sapphiredev/framework/).
+It's written in TypeScript and [Discord.js V13](https://github.com/discordjs/discord.js/), uses [Lavalink](https://github.com/freyacodes/Lavalink) for stable audio playback and [erela.js](https://github.com/MenuDocs/erela.js) as It's wrapper, it also uses the [Sapphire Framework for Discord bots](https://github.com/sapphiredev/framework/). (Note that this is a personal project, don't expect this code to be perfect and maybe it isn't a good idea to run it in a production environment)
 
 ## Requirements
 
