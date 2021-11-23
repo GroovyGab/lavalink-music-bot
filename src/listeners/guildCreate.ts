@@ -3,7 +3,7 @@ import { Events, Listener } from '@sapphire/framework';
 import type { Guild } from 'discord.js';
 import { cyan } from 'colorette';
 
-export class UserEvent extends Listener<typeof Events.GuildCreate> {
+export class GuildCrateEvent extends Listener<typeof Events.GuildCreate> {
 	public constructor(context: PieceContext, options?: ListenerOptions) {
 		super(context, {
 			...options,
