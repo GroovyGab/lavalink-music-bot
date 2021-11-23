@@ -6,7 +6,7 @@ It's written in TypeScript and [Discord.js V13](https://github.com/discordjs/dis
 
 ## Requirements
 
-1. Node.js 16.1.x
+1. Node.js 16.6.x
 2. Java version 13 or higher (For Lavalink).
 3. Lavalink (Get it from [here](https://github.com/freyacodes/Lavalink/releases))
 4. Spotify API Client ID, and Client Secret. (Get them from [here](https://developer.spotify.com/dashboard/applications))
