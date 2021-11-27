@@ -18,6 +18,7 @@ export class ReadyEvent extends Listener {
 		this.container.logger.info(`Client ready; Logged in as ${this.container.client.user?.tag} (${this.container.client.user?.id})`);
 		this.printBanner();
 		this.printStoreDebugInformation();
+
 		this.container.client.manager.init(this.container.client.id!);
 	}
 
@@ -33,12 +34,13 @@ export class ReadyEvent extends Listener {
 
 		// Offset Pad
 		const pad = ' '.repeat(7);
+		const devMode = ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}`;
 
 		console.log(
 			String.raw`
 ${line01} ${pad}${blc('1.0.0')}
 ${line02} ${pad}[${success}] Gateway
-${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''}
+${line03}${dev ? devMode : ''}
 		`.trim()
 		);
 	}

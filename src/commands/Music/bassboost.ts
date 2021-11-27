@@ -14,7 +14,7 @@ export class BassBoostCommand extends Command {
 		if (!message.guild.me) return;
 
 		const embedReply = new MessageEmbed();
-		
+
 		try {
 			const erelaPlayer = this.container.client.manager.get(message.guild.id);
 			const data = {
@@ -54,11 +54,11 @@ export class BassBoostCommand extends Command {
 				]*/
 			};
 			await erelaPlayer?.node.send(data);
-			return message.react('🔊');
+			return await message.react('🔊');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return await message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

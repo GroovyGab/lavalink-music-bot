@@ -23,22 +23,22 @@ export class NowplayingCommand extends Command {
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			const trackIsStream = erelaPlayer.queue.current.isStream;
@@ -54,13 +54,13 @@ export class NowplayingCommand extends Command {
 
 			embedReply.setDescription(`[${trackInfo.title}](${trackInfo.uri}) [${trackInfo.requester}]`).setFooter(embedFooter);
 
-			return message.channel.send({
+			return await message.channel.send({
 				embeds: [embedReply]
 			});
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return await message.channel.send({ embeds: [embedReply] });
 		}
 	}
 

@@ -21,24 +21,24 @@ export class JoinCommand extends Command {
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer) {
 				embedReply.setDescription("There's already an active connection on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
 				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!userVCBotPermissions.has('SPEAK')) {
 				embedReply.setDescription('The "Speak" permission is needed in order to play music in the voice channel!');
-				return message.channel.send({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			erelaPlayer = this.container.client.manager.create({
@@ -50,11 +50,11 @@ export class JoinCommand extends Command {
 			});
 			erelaPlayer.connect();
 
-			return message.react('👌');
+			return await message.react('👌');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return await message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

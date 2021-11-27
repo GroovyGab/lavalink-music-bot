@@ -14,6 +14,8 @@ declare module '@sapphire/framework' {
 	interface StoreRegistryEntries {
 		slashCommands: SlashCommandStore;
 	}
-}
 
-String.prototype.endsWith();
+	interface Preconditions {
+		OwnerOnly: never;
+	}
+}

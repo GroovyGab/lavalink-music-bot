@@ -4,4 +4,5 @@ dist/
 lavalink_server/
 src/util/SlashCommandUtil/config.json
 src/commands/General
-extra/
+extras/
+experiments/
