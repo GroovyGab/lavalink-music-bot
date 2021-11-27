@@ -19,6 +19,7 @@ export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		const startTimestamp = performance.now();
 		const code = await args.rest('string');
+		const embedReply = new MessageEmbed();
 
 		const { result, success, type } = await this.eval(message, code, {
 			async: args.getFlags('async'),
@@ -31,16 +32,40 @@ export class UserCommand extends Command {
 		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
 		if (args.getFlags('silent', 's')) return null;
 
-		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
+		if (output.length > 1024) {
+			embedReply
+				.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+				.setDescription('**Evaluation complete!**')
+				.addFields([
+					{
+						name: 'Type',
+						value: `\`\`\`typescript\n${type}\`\`\``,
+						inline: true
+					},
+					{
+						name: 'Evaluated in',
+						value: `\`\`\`css\n${Math.floor(tookMs) - Math.floor(startTimestamp)}ms\`\`\``,
+						inline: true
+					},
+					{
+						name: 'Input',
+						value: `\`\`\`javascript\n${code}\`\`\``
+					},
+					{
+						name: 'Output',
+						value: 'Too long, sent as a file.'
+					}
+				])
+				.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+				.setColor('AQUA');
 
-		if (output.length > 2000) {
 			return send(message, {
-				content: `Output was too long... sent the result as a file.\n\n${typeFooter}`,
-				files: [{ attachment: Buffer.from(output), name: 'output.txt' }]
+				files: [{ attachment: Buffer.from(output), name: 'output.txt' }],
+				embeds: [embedReply]
 			});
 		}
 
-		const embedReply = new MessageEmbed()
+		embedReply
 			.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
 			.setDescription('**Evaluation complete!**')
 			.addFields([
@@ -66,7 +91,7 @@ export class UserCommand extends Command {
 			.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
 			.setColor('AQUA');
 
-		return message.channel.send({ embeds: [embedReply] });
+		return send(message, { embeds: [embedReply] });
 	}
 
 	private async eval(_message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
