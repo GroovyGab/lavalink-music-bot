@@ -3,7 +3,8 @@ import { Args, Command, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
-import type { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
+import { performance } from 'perf_hooks';
 import { inspect } from 'util';
 
 @ApplyOptions<CommandOptions>({
@@ -16,6 +17,7 @@ import { inspect } from 'util';
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
+		const startTimestamp = performance.now();
 		const code = await args.rest('string');
 
 		const { result, success, type } = await this.eval(message, code, {
@@ -23,6 +25,8 @@ export class UserCommand extends Command {
 			depth: Number(args.getOption('depth')) ?? 0,
 			showHidden: args.getFlags('hidden', 'showHidden')
 		});
+
+		const tookMs = performance.now();
 
 		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
 		if (args.getFlags('silent', 's')) return null;
@@ -36,7 +40,33 @@ export class UserCommand extends Command {
 			});
 		}
 
-		return send(message, `${output}\n${typeFooter}`);
+		const embedReply = new MessageEmbed()
+			.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+			.setDescription('**Evaluation complete!**')
+			.addFields([
+				{
+					name: 'Type',
+					value: `\`\`\`typescript\n${type}\`\`\``,
+					inline: true
+				},
+				{
+					name: 'Evaluated in',
+					value: `\`\`\`css\n${Math.floor(tookMs) - Math.floor(startTimestamp)}ms\`\`\``,
+					inline: true
+				},
+				{
+					name: 'Input',
+					value: `\`\`\`javascript\n${code}\`\`\``
+				},
+				{
+					name: 'Output',
+					value: output
+				}
+			])
+			.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+			.setColor('AQUA');
+
+		return message.channel.send({ embeds: [embedReply] });
 	}
 
 	private async eval(_message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
