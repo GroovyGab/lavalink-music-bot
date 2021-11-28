@@ -29,7 +29,8 @@ export class UserCommand extends Command {
 
 		const tookMs = performance.now();
 
-		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
+		const output = success ? codeBlock('js', result) : codeBlock('bash', result);
+
 		if (args.getFlags('silent', 's')) return null;
 
 		if (output.length > 1024) {
@@ -39,17 +40,17 @@ export class UserCommand extends Command {
 				.addFields([
 					{
 						name: 'Type',
-						value: `\`\`\`typescript\n${type}\`\`\``,
+						value: codeBlock('typescript', type),
 						inline: true
 					},
 					{
 						name: 'Evaluated in',
-						value: `\`\`\`css\n${Math.floor(tookMs) - Math.floor(startTimestamp)}ms\`\`\``,
+						value: codeBlock('css', `${Math.floor(tookMs) - Math.floor(startTimestamp)}ms`),
 						inline: true
 					},
 					{
 						name: 'Input',
-						value: `\`\`\`javascript\n${code}\`\`\``
+						value: codeBlock('js', code)
 					},
 					{
 						name: 'Output',
@@ -71,17 +72,17 @@ export class UserCommand extends Command {
 			.addFields([
 				{
 					name: 'Type',
-					value: `\`\`\`typescript\n${type}\`\`\``,
+					value: codeBlock('typescript', type),
 					inline: true
 				},
 				{
 					name: 'Evaluated in',
-					value: `\`\`\`css\n${Math.floor(tookMs) - Math.floor(startTimestamp)}ms\`\`\``,
+					value: codeBlock('css', `${Math.floor(tookMs) - Math.floor(startTimestamp)}ms`),
 					inline: true
 				},
 				{
 					name: 'Input',
-					value: `\`\`\`javascript\n${code}\`\`\``
+					value: codeBlock('js', code)
 				},
 				{
 					name: 'Output',
@@ -94,20 +95,21 @@ export class UserCommand extends Command {
 		return send(message, { embeds: [embedReply] });
 	}
 
-	private async eval(_message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
+	//@ts-ignore
+	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
 
 		let success = true;
 		let result = null;
 
 		try {
-			// eslint-disable-next-line no-eval
 			result = eval(code);
 		} catch (error) {
 			if (error && error instanceof Error && error.stack) {
 				this.container.client.logger.error(error);
 			}
-			result = error;
+			//@ts-ignore
+			result = error.message;
 			success = false;
 		}
 
