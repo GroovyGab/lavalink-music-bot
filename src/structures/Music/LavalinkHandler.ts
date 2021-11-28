@@ -36,11 +36,6 @@ export class LavalinkHandler extends Manager {
 		this.client = client;
 
 		this.on('nodeConnect', (node) => {
-			/*const statsData = [
-				['CPU', 'System Load', 'Lavalink Load', 'CPU Cores'],
-				['', `${node.stats.cpu.systemLoad}%`, `${node.stats.cpu.lavalinkLoad}%`, node.stats.cpu.cores]
-			];
-			console.log(table(statsData));*/
 			this.client.logger.info(`[Lavalink] Node "${node.options.identifier}" is now connected.`);
 		})
 			.on('nodeCreate', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} was created.`))
@@ -59,7 +54,7 @@ export class LavalinkHandler extends Manager {
 			.on('queueEnd', (player) => {
 				if (!player.textChannel) return;
 
-				this.embedReply.setDescription('Queue has ended, feel free to add more songs using `%play`.');
+				this.embedReply.setDescription(`Queue has ended, feel free to add more songs using  \`${process.env.PREFIX}play\`.`);
 
 				const guild = this.client.guilds.cache.get(player.guild);
 				const channel = this.client.channels.cache.get(player.textChannel);
