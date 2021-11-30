@@ -15,7 +15,7 @@
 		"@sapphire/plugin-editable-commands": "^1.1.0",
 		"@sapphire/plugin-logger": "^2.1.0",
 		"@sapphire/plugin-subcommands": "^2.1.0",
-		"@sapphire/time-utilities": "^1.4.6",
+		"@sapphire/time-utilities": "^1.5.0",
 		"@sapphire/type": "^2.1.2",
 		"@sapphire/utilities": "^3.0.8",
 		"@skyra/editable-commands": "^2.1.0",
