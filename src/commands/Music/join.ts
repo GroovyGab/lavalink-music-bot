@@ -54,7 +54,7 @@ export class JoinCommand extends Command {
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

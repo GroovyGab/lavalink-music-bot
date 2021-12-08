@@ -36,7 +36,8 @@ export class QueueCommand extends Command {
 			}
 
 			if (!erelaPlayer.queue.length) {
-				embedReply.setDescription(`${erelaPlayer.queue.current ? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n` : ''}The queue is empty.`);
+				const nowPlaying = erelaPlayer.queue.current ? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n` : '';
+				embedReply.setDescription(`${nowPlaying}The queue is empty.`);
 				return await message.channel.send({ embeds: [embedReply] });
 			}
 
@@ -54,24 +55,24 @@ export class QueueCommand extends Command {
 				return resultArray;
 			}, []);
 
-			const queueTextArrr = [];
+			const queueTextArr = [];
 
 			for (const item of trackNameArrChunks) {
 				const trackName = item.join('\n');
-				queueTextArrr.push([trackName]);
+				queueTextArr.push([trackName]);
 			}
 
 			const paginatedMessage = new PaginatedMessage({
 				template: new MessageEmbed()
 			});
 
-			queueTextArrr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
+			queueTextArr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
 			return await paginatedMessage.run(message, message.author);
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

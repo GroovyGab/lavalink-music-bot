@@ -75,9 +75,9 @@ export class PlayCommand extends Command {
 				await this.container.client.sleep(1000);
 
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-					const newvCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
+					const newVoiceChannelPerms = userVoiceChannel.permissionsFor(message.guild.me);
 
-					if (newvCBotPermissions.has('MANAGE_CHANNELS') && newvCBotPermissions.has('MUTE_MEMBERS') && newvCBotPermissions.has('MOVE_MEMBERS')) {
+					if (newVoiceChannelPerms.has('MANAGE_CHANNELS') && newVoiceChannelPerms.has('MUTE_MEMBERS') && newVoiceChannelPerms.has('MOVE_MEMBERS')) {
 						message.guild.me.voice.setSuppressed(false);
 					} else {
 						warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
@@ -109,12 +109,12 @@ export class PlayCommand extends Command {
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				embedReply.setDescription('You must specify a search term!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

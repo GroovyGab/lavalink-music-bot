@@ -42,7 +42,10 @@ export class LavalinkHandler extends Manager {
 			.on('nodeError', (node, error) => this.client.logger.error(`[Lavalink] Node ${node.options.identifier} had an error: `, error))
 			.on('nodeDestroy', (node) => this.client.logger.error(`[Lavalink] Node "${node.options.identifier} was destroyed." `))
 			.on('nodeReconnect', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} is reconnecting.`))
-			.on('nodeDisconnect', (node, reason) => this.client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`))
+			.on('nodeDisconnect', (node, reason) => {
+				const reasonAndCode = `${reason.reason}, Code: ${reason.code}`;
+				this.client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? reasonAndCode : 'No reason.'}`);
+			})
 			.on('playerCreate', (player) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 				this.client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
@@ -81,8 +84,8 @@ export class LavalinkHandler extends Manager {
 					if (!newChannelFetch || !newChannelFetch.isVoice()) return;
 
 					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
-						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
-						if (newvCBotPermissions.has('MANAGE_CHANNELS') || newvCBotPermissions.has('MUTE_MEMBERS') || newvCBotPermissions.has('MOVE_MEMBERS')) {
+						const newVCBotPerms = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
+						if (newVCBotPerms.has('MANAGE_CHANNELS') || newVCBotPerms.has('MUTE_MEMBERS') || newVCBotPerms.has('MOVE_MEMBERS')) {
 							newChannelFetch.guild.me!.voice.setSuppressed(false);
 						}
 					}

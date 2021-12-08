@@ -53,17 +53,17 @@ export class JumpCommand extends Command {
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				embedReply.setDescription('You neeed to specify the number of the track to be jumped to!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (error.identifier === 'integerError') {
-				embedReply.setDescription('The number of the track to be jumped to must be a number!');
-				return await message.channel.send({ embeds: [embedReply] });
+				embedReply.setDescription('The value of the track to be jumped to must be a number!');
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

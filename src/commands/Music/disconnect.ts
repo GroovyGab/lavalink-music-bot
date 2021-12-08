@@ -8,7 +8,7 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Disconnects the bot from your voice channel and clears the queue.',
 	fullCategory: ['music']
 })
-export class DisconectCommand extends Command {
+export class DisconnectCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.member) return;
@@ -40,7 +40,7 @@ export class DisconectCommand extends Command {
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

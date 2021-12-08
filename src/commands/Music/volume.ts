@@ -52,36 +52,36 @@ export class VolumeCommand extends Command {
 			if (error.identifier === 'argsMissing') {
 				if (!userVoiceChannel) {
 					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-					return await message.channel.send({ embeds: [embedReply] });
+					return message.channel.send({ embeds: [embedReply] });
 				}
 
 				if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-					return await message.channel.send({ embeds: [embedReply] });
+					return message.channel.send({ embeds: [embedReply] });
 				}
 
 				if (!erelaPlayer) {
 					embedReply.setDescription("There isn't an active player on this server!");
-					return await message.channel.send({ embeds: [embedReply] });
+					return message.channel.send({ embeds: [embedReply] });
 				}
 
 				if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 					embedReply.setDescription("There's nothing currently playing on this server!");
-					return await message.channel.send({ embeds: [embedReply] });
+					return message.channel.send({ embeds: [embedReply] });
 				}
 
 				embedReply.setDescription(`The volume is currently set at \`${erelaPlayer.volume}%\``);
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (error.identifier === 'floatError') {
-				embedReply.setDescription(`The value must be a number!`);
-				return await message.channel.send({ embeds: [embedReply] });
+				embedReply.setDescription(`The value must be a number/float!`);
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }
