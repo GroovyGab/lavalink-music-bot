@@ -1,8 +1,6 @@
 import '../lib/setup';
 import { SapphireClient, LogLevel } from '@sapphire/framework';
-import { SlashCommandStore } from './SlashCommands/SlashCommandStore';
 import { LavalinkHandler } from './Music/LavalinkHandler';
-import { Collection } from 'discord.js';
 
 export class MusicBotClient extends SapphireClient {
 	constructor() {
@@ -18,8 +16,6 @@ export class MusicBotClient extends SapphireClient {
 
 		this.validate();
 		this.manager = new LavalinkHandler(this);
-		this.timeouts = new Collection();
-		this.stores.register(new SlashCommandStore());
 	}
 
 	public async main() {

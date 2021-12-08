@@ -25,41 +25,41 @@ export class PlayCommand extends Command {
 
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			const userVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
 
 			if (!userVCBotPermissions.has('CONNECT')) {
 				embedReply.setDescription('The "Connect" permission is needed in order to play music in the voice channel!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!userVCBotPermissions.has('SPEAK')) {
 				embedReply.setDescription('The "Speak" permission is needed in order to play music in the voice channel!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			const result = await this.container.client.manager.search(search, message.author);
 
 			if (result.loadType === 'NO_MATCHES') {
 				embedReply.setDescription("Couldn't find a result for the given search term!");
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (result.loadType === 'LOAD_FAILED') {
 				embedReply.setDescription(result.exception?.message ? result.exception?.message : 'Failed to load one or more tracks!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (result.loadType === 'PLAYLIST_LOADED' && result.playlist && result.playlist?.duration <= 0) {
 				embedReply.setDescription("That playlist's duration is too small!");
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
@@ -81,7 +81,7 @@ export class PlayCommand extends Command {
 						message.guild.me.voice.setSuppressed(false);
 					} else {
 						warnEmbed.setDescription("The voice channel is a stage and the bot doesn't have the permissions:\n**Manage Channels**, **Mute Members** or **Move Members**,\nThese are needed in order to become a stage speaker automatically.");
-						message.channel.send({ embeds: [warnEmbed] });
+						await message.channel.send({ embeds: [warnEmbed] });
 					}
 				}
 			}
@@ -95,24 +95,26 @@ export class PlayCommand extends Command {
 
 				if (!erelaPlayer.playing && !erelaPlayer.paused && erelaPlayer.queue.totalSize === result.tracks.length) erelaPlayer.play();
 
-				embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : `**${result.tracks.length - 1}**`} other tracks [${result.tracks[0].requester}]`);
-				return message.reply({ embeds: [embedReply] });
+				const playlistLength = `**${result.tracks.length - 1}**`;
+
+				embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${result.tracks.length - 1 <= 0 ? '**no**' : playlistLength} other tracks [${result.tracks[0].requester}]`);
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.queue.add(result.tracks[0]);
 			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
 
 			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
-			return message.reply({ embeds: [embedReply] });
+			return await message.channel.send({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				embedReply.setDescription('You must specify a search term!');
-				return message.reply({ embeds: [embedReply] });
+				return await message.channel.send({ embeds: [embedReply] });
 			}
 
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.reply({ embeds: [embedReply] });
+			return await message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

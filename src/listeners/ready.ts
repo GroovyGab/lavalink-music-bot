@@ -4,7 +4,7 @@ import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colore
 
 const dev = process.env.NODE_ENV !== 'production';
 
-export class UserEvent extends Listener {
+export class ReadyEvent extends Listener {
 	private readonly style = dev ? yellow : blue;
 
 	public constructor(context: PieceContext, options?: ListenerOptions) {
@@ -18,6 +18,7 @@ export class UserEvent extends Listener {
 		this.container.logger.info(`Client ready; Logged in as ${this.container.client.user?.tag} (${this.container.client.user?.id})`);
 		this.printBanner();
 		this.printStoreDebugInformation();
+
 		this.container.client.manager.init(this.container.client.id!);
 	}
 
@@ -33,12 +34,13 @@ export class UserEvent extends Listener {
 
 		// Offset Pad
 		const pad = ' '.repeat(7);
+		const devMode = ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}`;
 
 		console.log(
 			String.raw`
 ${line01} ${pad}${blc('1.0.0')}
 ${line02} ${pad}[${success}] Gateway
-${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''}
+${line03}${dev ? devMode : ''}
 		`.trim()
 		);
 	}

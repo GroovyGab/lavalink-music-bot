@@ -1,7 +1,7 @@
 import { Listener, PieceContext } from '@sapphire/framework';
 import type { VoicePacket } from 'erela.js';
 
-export class CommandInteraction extends Listener {
+export class RawEvent extends Listener {
 	constructor(context: PieceContext) {
 		super(context);
 	}

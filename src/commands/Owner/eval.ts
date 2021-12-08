@@ -3,7 +3,8 @@ import { Args, Command, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
-import type { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
+import { performance } from 'perf_hooks';
 import { inspect } from 'util';
 
 @ApplyOptions<CommandOptions>({
@@ -16,7 +17,9 @@ import { inspect } from 'util';
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
+		const startTimestamp = performance.now();
 		const code = await args.rest('string');
+		const embedReply = new MessageEmbed();
 
 		const { result, success, type } = await this.eval(message, code, {
 			async: args.getFlags('async'),
@@ -24,44 +27,94 @@ export class UserCommand extends Command {
 			showHidden: args.getFlags('hidden', 'showHidden')
 		});
 
-		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
+		const tookMs = performance.now();
+
+		const output = success ? codeBlock('js', result) : codeBlock('bash', result);
+
 		if (args.getFlags('silent', 's')) return null;
 
-		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
+		if (output.length > 1024) {
+			embedReply
+				.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+				.setDescription('**Evaluation complete!**')
+				.addFields([
+					{
+						name: 'Type',
+						value: codeBlock('typescript', type),
+						inline: true
+					},
+					{
+						name: 'Evaluated in',
+						value: codeBlock('css', `${Math.floor(tookMs) - Math.floor(startTimestamp)}ms`),
+						inline: true
+					},
+					{
+						name: 'Input',
+						value: codeBlock('js', code)
+					},
+					{
+						name: 'Output',
+						value: 'Too long, sent as a file.'
+					}
+				])
+				.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+				.setColor('AQUA');
 
-		if (output.length > 2000) {
 			return send(message, {
-				content: `Output was too long... sent the result as a file.\n\n${typeFooter}`,
-				files: [{ attachment: Buffer.from(output), name: 'output.js' }]
+				files: [{ attachment: Buffer.from(output), name: 'output.txt' }],
+				embeds: [embedReply]
 			});
 		}
 
-		return send(message, `${output}\n${typeFooter}`);
+		embedReply
+			.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+			.setDescription('**Evaluation complete!**')
+			.addFields([
+				{
+					name: 'Type',
+					value: codeBlock('typescript', type),
+					inline: true
+				},
+				{
+					name: 'Evaluated in',
+					value: codeBlock('css', `${Math.floor(tookMs) - Math.floor(startTimestamp)}ms`),
+					inline: true
+				},
+				{
+					name: 'Input',
+					value: codeBlock('js', code)
+				},
+				{
+					name: 'Output',
+					value: output
+				}
+			])
+			.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+			.setColor('AQUA');
+
+		return send(message, { embeds: [embedReply] });
 	}
 
+	//@ts-ignore
 	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
-
-		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const msg = message;
 
 		let success = true;
 		let result = null;
 
 		try {
-			// eslint-disable-next-line no-eval
 			result = eval(code);
 		} catch (error) {
 			if (error && error instanceof Error && error.stack) {
 				this.container.client.logger.error(error);
 			}
-			result = error;
+			//@ts-ignore
+			result = error.message;
 			success = false;
 		}
 
 		const type = new Type(result).toString();
-		if (isThenable(result)) result = await result;
+		if (isThenable(result)) result = result;
 
 		if (typeof result !== 'string') {
 			result = inspect(result, {
