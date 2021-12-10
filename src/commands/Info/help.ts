@@ -18,7 +18,7 @@ export class TwentyFourSevenCommand extends Command {
 
 		//@ts-ignore
 		const paginatedMessage = new PaginatedMessage({
-			template: new MessageEmbed().setTitle(`Help for ${this.container.client.user?.tag}`)
+			template: new MessageEmbed().setTitle(`Help for ${this.container.client.user?.tag}`).setThumbnail(this.container.client.user?.avatarURL()!)
 		});
 
 		try {
