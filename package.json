@@ -12,7 +12,7 @@
 		"@sapphire/framework": "^2.2.0",
 		"@sapphire/plugin-editable-commands": "^1.1.0",
 		"@sapphire/plugin-logger": "^2.1.0",
-		"@sapphire/plugin-subcommands": "^2.1.0",
+		"@sapphire/plugin-subcommands": "^2.1.2",
 		"@sapphire/type": "^2.1.1",
 		"@sapphire/utilities": "^3.0.8",
 		"cz-conventional-changelog": "^3.3.0",
