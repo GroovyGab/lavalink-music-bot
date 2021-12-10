@@ -16,6 +16,11 @@ export class MusicBotClient extends SapphireClient {
 
 		this.validate();
 		this.manager = new LavalinkHandler(this);
+
+		process.on('SIGINT', () => {
+			this.destroy();
+			process.exit(0);
+		});
 	}
 
 	public async main() {
