@@ -75,19 +75,9 @@ export class PlayCommand extends Command {
 				await this.container.client.sleep(1000);
 
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
-<<<<<<< HEAD
-					const newVCBotPermissions = userVoiceChannel.permissionsFor(message.guild.me);
-
-					if (
-						newVCBotPermissions.has('MANAGE_CHANNELS') &&
-						newVCBotPermissions.has('MUTE_MEMBERS') &&
-						newVCBotPermissions.has('MOVE_MEMBERS')
-					) {
-=======
 					const newVoiceChannelPerms = userVoiceChannel.permissionsFor(message.guild.me);
 
 					if (newVoiceChannelPerms.has('MANAGE_CHANNELS') && newVoiceChannelPerms.has('MUTE_MEMBERS') && newVoiceChannelPerms.has('MOVE_MEMBERS')) {
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 						message.guild.me.voice.setSuppressed(false);
 					} else {
 						warnEmbed.setDescription(

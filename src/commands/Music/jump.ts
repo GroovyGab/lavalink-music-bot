@@ -52,9 +52,6 @@ export class JumpCommand extends Command {
 			return await message.react('👌');
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
-<<<<<<< HEAD
-				embedReply.setDescription('You neeed to specify the number of the track to be jumped to!');
-=======
 				if (!userVoiceChannel) {
 					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 					return message.channel.send({ embeds: [embedReply] });
@@ -76,14 +73,10 @@ export class JumpCommand extends Command {
 				}
 
 				embedReply.setDescription('You need to specify the number of the track to be jumped to!');
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (error.identifier === 'integerError') {
-<<<<<<< HEAD
-				embedReply.setDescription('The number of the track to be jumped to must be a number!');
-=======
 				if (!userVoiceChannel) {
 					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 					return message.channel.send({ embeds: [embedReply] });
@@ -107,7 +100,6 @@ export class JumpCommand extends Command {
 				console.log(this.lexer);
 
 				embedReply.setDescription('The value of the track to be jumped to must be a number!');
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 				return message.channel.send({ embeds: [embedReply] });
 			}
 

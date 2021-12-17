@@ -99,11 +99,7 @@ export class LoopCommand extends Command {
 				if (erelaPlayer.trackRepeat) {
 					erelaPlayer.setTrackRepeat(false);
 					erelaPlayer.setQueueRepeat(true);
-<<<<<<< HEAD
-					embedReply.setDescription('Now looping the **queue**.');
-=======
 					embedReply.setDescription('Now loping the **queue**.');
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 					return message.channel.send({ embeds: [embedReply] });
 				}
 
