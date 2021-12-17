@@ -27,19 +27,12 @@ export class MusicBotClient extends SapphireClient {
 
 		this.validate();
 		this.manager = new LavalinkHandler(this);
-<<<<<<< HEAD
 		this.statcord = new StatcordClient({
 			key: process.env['STATCORD_KEY']!,
 			client: this,
 			postCpuStatistics: true,
 			postMemStatistics: true,
 			postNetworkStatistics: true
-=======
-
-		process.on('SIGINT', () => {
-			this.destroy();
-			process.exit(0);
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 		});
 	}
 
