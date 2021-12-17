@@ -36,6 +36,7 @@ export class QueueCommand extends Command {
 			}
 
 			if (!erelaPlayer.queue.length) {
+<<<<<<< HEAD
 				embedReply.setDescription(
 					`${
 						erelaPlayer.queue.current
@@ -44,6 +45,11 @@ export class QueueCommand extends Command {
 					}The queue is empty.`
 				);
 				return message.channel.send({ embeds: [embedReply] });
+=======
+				const nowPlaying = erelaPlayer.queue.current ? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n` : '';
+				embedReply.setDescription(`${nowPlaying}The queue is empty.`);
+				return await message.channel.send({ embeds: [embedReply] });
+>>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 			}
 
 			/**
@@ -60,17 +66,18 @@ export class QueueCommand extends Command {
 				return resultArray;
 			}, []);
 
-			const queueTextArrr = [];
+			const queueTextArr = [];
 
 			for (const item of trackNameArrChunks) {
 				const trackName = item.join('\n');
-				queueTextArrr.push([trackName]);
+				queueTextArr.push([trackName]);
 			}
 
 			const paginatedMessage = new PaginatedMessage({
 				template: new MessageEmbed()
 			});
 
+<<<<<<< HEAD
 			queueTextArrr.forEach((textChunk) =>
 				paginatedMessage.addPageEmbed((embed) =>
 					embed.setDescription(
@@ -78,6 +85,9 @@ export class QueueCommand extends Command {
 					)
 				)
 			);
+=======
+			queueTextArr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
+>>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 			return await paginatedMessage.run(message, message.author);
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);

@@ -8,19 +8,14 @@
 		"@discordjs/collection": "^0.3.2",
 		"@discordjs/rest": "^0.1.0-canary.0",
 		"@sapphire/decorators": "^3.1.3",
-		"@sapphire/discord-utilities": "^2.2.2",
-		"@sapphire/discord.js-utilities": "^4.1.3",
-		"@sapphire/fetch": "^2.0.2",
-		"@sapphire/framework": "^2.2.0",
-		"@sapphire/plugin-editable-commands": "^1.1.0",
-		"@sapphire/plugin-logger": "^2.1.0",
-		"@sapphire/plugin-subcommands": "^2.1.0",
-		"@sapphire/time-utilities": "^1.4.6",
-		"@sapphire/type": "^2.1.2",
+		"@sapphire/discord.js-utilities": "^4.1.5",
+		"@sapphire/framework": "^2.2.1",
+		"@sapphire/plugin-editable-commands": "^1.1.1",
+		"@sapphire/plugin-logger": "^2.1.1",
+		"@sapphire/plugin-subcommands": "^2.1.2",
+		"@sapphire/type": "^2.1.1",
 		"@sapphire/utilities": "^3.0.8",
-		"@skyra/editable-commands": "^2.1.0",
-		"cz-conventional-changelog": "^3.0.1",
-		"discord-api-types": "^0.24.0",
+		"cz-conventional-changelog": "^3.3.0",
 		"discord.js": "^13.3.1",
 		"dotenv-cra": "^3.0.2",
 		"erela.js": "^2.3.3",
@@ -32,13 +27,19 @@
 	},
 	"devDependencies": {
 		"@sapphire/prettier-config": "^1.2.7",
+<<<<<<< HEAD
 		"@sapphire/ts-config": "^3.1.3",
 		"@types/node": "^16.11.10",
 		"@types/ws": "^8.2.0",
+=======
+		"@sapphire/ts-config": "^3.1.6",
+		"@types/node": "^16.11.12",
+		"@types/ws": "^8.2.2",
+>>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 		"npm-run-all": "^4.1.5",
 		"prettier": "^2.4.1",
 		"tsc-watch": "^4.5.0",
-		"typescript": "^4.5.2"
+		"typescript": "^4.5.3"
 	},
 	"scripts": {
 		"build": "tsc",

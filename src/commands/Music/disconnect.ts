@@ -8,7 +8,7 @@ import { Message, MessageEmbed } from 'discord.js';
 	description: 'Disconnects the bot from your voice channel and clears the queue.',
 	fullCategory: ['music']
 })
-export class DisconectCommand extends Command {
+export class DisconnectCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.member) return;

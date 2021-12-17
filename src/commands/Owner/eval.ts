@@ -9,13 +9,13 @@ import { inspect } from 'util';
 
 @ApplyOptions<CommandOptions>({
 	aliases: ['ev'],
-	description: 'Evals any JavaScript code',
+	description: 'Evaluates any JavaScript code',
 	quotes: [],
 	preconditions: ['OwnerOnly'],
 	flags: ['async', 'hidden', 'showHidden', 'silent', 's'],
 	options: ['depth']
 })
-export class UserCommand extends Command {
+export class EvalCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		const startTimestamp = performance.now();
 		const code = await args.rest('string');

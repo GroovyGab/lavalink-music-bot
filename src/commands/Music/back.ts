@@ -6,7 +6,7 @@ import { Message, MessageEmbed } from 'discord.js';
 	name: 'back',
 	aliases: ['previous'],
 	description: 'Skips to the previous song.',
-	fullCategory: ['music']
+	fullCategory: ['music'],
 })
 export class BackCommand extends Command {
 	public async messageRun(message: Message) {

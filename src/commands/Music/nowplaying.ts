@@ -9,7 +9,7 @@ import { splitBar } from 'string-progressbar';
 	description: 'Shows the currently playing track.',
 	fullCategory: ['music']
 })
-export class NowplayingCommand extends Command {
+export class NowPlayingCommand extends Command {
 	public async messageRun(message: Message) {
 		if (!message.guild) return;
 		if (!message.member) return;

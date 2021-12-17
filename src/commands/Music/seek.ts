@@ -23,9 +23,9 @@ export class SeekCommand extends Command {
 		const formatValidator = /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/g;
 
 		try {
-			const seekAmmount = await args.rest('string');
+			const seekAmount = await args.rest('string');
 
-			const timeArray = seekAmmount.split(':').map((value) => {
+			const timeArray = seekAmount.split(':').map((value) => {
 				return parseInt(value, 10);
 			});
 
@@ -49,14 +49,19 @@ export class SeekCommand extends Command {
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
-			if (!formatValidator.test(seekAmmount)) {
+			if (!formatValidator.test(seekAmount)) {
 				embedReply.setDescription('Invalid time format!, usage: `%seek hh:mm:ss`, `%seek mm:ss`, `%seek ss`');
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer.queue.current?.isSeekable) {
+<<<<<<< HEAD
 				embedReply.setDescription("This track isn'ŧ seekable!");
 				return message.channel.send({ embeds: [embedReply] });
+=======
+				embedReply.setDescription("This track isn't seekable!");
+				return await message.channel.send({ embeds: [embedReply] });
+>>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 			}
 
 			let seekSeconds;
@@ -89,7 +94,11 @@ export class SeekCommand extends Command {
 			return await message.react('👌');
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
+<<<<<<< HEAD
 				embedReply.setDescription('You must specify the ammount of time to seek!');
+=======
+				embedReply.setDescription('You must specify the amount of time to seek!');
+>>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
