@@ -1,6 +1,6 @@
 import { container, Listener } from '@sapphire/framework';
 
-export class NodeConnectEvent extends Listener {
+export class AutopostStartEvent extends Listener {
 	public constructor(context: Listener.Context, options: Listener.Options) {
 		super(context, {
 			...options,
