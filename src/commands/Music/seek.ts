@@ -55,13 +55,8 @@ export class SeekCommand extends Command {
 			}
 
 			if (!erelaPlayer.queue.current?.isSeekable) {
-<<<<<<< HEAD
-				embedReply.setDescription("This track isn'ŧ seekable!");
-				return message.channel.send({ embeds: [embedReply] });
-=======
 				embedReply.setDescription("This track isn't seekable!");
 				return await message.channel.send({ embeds: [embedReply] });
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 			}
 
 			let seekSeconds;
@@ -94,11 +89,7 @@ export class SeekCommand extends Command {
 			return await message.react('👌');
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
-<<<<<<< HEAD
-				embedReply.setDescription('You must specify the ammount of time to seek!');
-=======
 				embedReply.setDescription('You must specify the amount of time to seek!');
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 				return message.channel.send({ embeds: [embedReply] });
 			}
 

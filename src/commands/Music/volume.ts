@@ -75,11 +75,7 @@ export class VolumeCommand extends Command {
 			}
 
 			if (error.identifier === 'floatError') {
-<<<<<<< HEAD
-				embedReply.setDescription(`The value must be a number!`);
-=======
 				embedReply.setDescription(`The value must be a number/float!`);
->>>>>>> ad0acc02d2a4d4d42f5156fdfdc70ee48ec89fcc
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
