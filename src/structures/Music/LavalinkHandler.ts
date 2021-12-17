@@ -35,18 +35,10 @@ export class LavalinkHandler extends Manager {
 		this.embedReply = new MessageEmbed();
 		this.client = client;
 
-		this.on('nodeConnect', (node) => {
-			this.client.logger.info(`[Lavalink] Node "${node.options.identifier}" is now connected.`);
+		this.on('playerCreate', (player) => {
+			const guild = this.client.guilds.cache.get(player.guild);
+			this.client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
 		})
-			.on('nodeCreate', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} was created.`))
-			.on('nodeError', (node, error) => this.client.logger.error(`[Lavalink] Node ${node.options.identifier} had an error: `, error))
-			.on('nodeDestroy', (node) => this.client.logger.error(`[Lavalink] Node "${node.options.identifier} was destroyed." `))
-			.on('nodeReconnect', (node) => this.client.logger.info(`[Lavalink] Node "${node.options.identifier} is reconnecting.`))
-			.on('nodeDisconnect', (node, reason) => this.client.logger.warn(`Node "${node.options.identifier}" was disconnected, Reason: ${reason ? `${reason.reason}, Code: ${reason.code}` : 'No reason.'}`))
-			.on('playerCreate', (player) => {
-				const guild = this.client.guilds.cache.get(player.guild);
-				this.client.logger.info(`A new player was created in guild ${guild?.name}[${guild?.id}]`);
-			})
 			.on('playerDestroy', (player) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 				this.client.logger.info(`Player was destroyed in guild ${guild?.name}[${guild?.id}]`);
@@ -82,31 +74,43 @@ export class LavalinkHandler extends Manager {
 
 					if (newChannelFetch.type === 'GUILD_STAGE_VOICE') {
 						const newvCBotPermissions = newChannelFetch.permissionsFor(newChannelFetch.guild.me!);
-						if (newvCBotPermissions.has('MANAGE_CHANNELS') || newvCBotPermissions.has('MUTE_MEMBERS') || newvCBotPermissions.has('MOVE_MEMBERS')) {
+						if (
+							newvCBotPermissions.has('MANAGE_CHANNELS') ||
+							newvCBotPermissions.has('MUTE_MEMBERS') ||
+							newvCBotPermissions.has('MOVE_MEMBERS')
+						) {
 							newChannelFetch.guild.me!.voice.setSuppressed(false);
 						}
 					}
 
 					player.pause(false);
 
-					this.client.logger.info(`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`);
+					this.client.logger.info(
+						`Player was moved from voice channel "${_initCHannel}" to "${newVoiceChannel}" in guild ${guild?.name}[${guild?.id}]`
+					);
 				}
 			})
 			.on('trackStart', (player, track) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 
-				this.client.logger.info(`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
+				this.client.logger.info(
+					`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
+				);
 			})
 			.on('trackEnd', (player, track) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 
-				this.client.logger.info(`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`);
+				this.client.logger.info(
+					`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
+				);
 			})
 			.on('trackStuck', (player, track) => {
 				const guild = this.client.guilds.cache.get(player.guild);
 				const channel = this.client.channels.cache.get(player.textChannel!);
 
-				this.client.logger.warn(`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`);
+				this.client.logger.warn(
+					`Track "${track.title}" by "${track.author}" got stuck during playback in guild ${guild?.name}[${guild?.id}], Skipping...`
+				);
 
 				if (!channel?.isText()) return;
 
@@ -120,7 +124,9 @@ export class LavalinkHandler extends Manager {
 				const guild = this.client.guilds.cache.get(player.guild);
 				const channel = this.client.channels.cache.get(player.textChannel!);
 
-				this.client.logger.error(`Track "${track.title}" by "${track.author}" had an error during playback in guild ${guild?.name}[${guild?.id}]`);
+				this.client.logger.error(
+					`Track "${track.title}" by "${track.author}" had an error during playback in guild ${guild?.name}[${guild?.id}]`
+				);
 
 				if (!channel?.isText()) return;
 

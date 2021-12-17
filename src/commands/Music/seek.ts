@@ -31,32 +31,32 @@ export class SeekCommand extends Command {
 
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!formatValidator.test(seekAmmount)) {
 				embedReply.setDescription('Invalid time format!, usage: `%seek hh:mm:ss`, `%seek mm:ss`, `%seek ss`');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer.queue.current?.isSeekable) {
 				embedReply.setDescription("This track isn'ŧ seekable!");
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			let seekSeconds;
@@ -76,13 +76,13 @@ export class SeekCommand extends Command {
 				}
 				default: {
 					embedReply.setDescription('Invalid time format!, usage: `%seek hh:mm:ss`, `%seek mm:ss`, `%seek ss`');
-					return await message.channel.send({ embeds: [embedReply] });
+					return message.channel.send({ embeds: [embedReply] });
 				}
 			}
 
 			if (seekSeconds > erelaPlayer.queue.current?.duration! / 1000 - 1) {
 				embedReply.setDescription("The specified time is longer that the current track's length!").setColor('RED');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.seek(seekSeconds * 1000);
@@ -90,12 +90,12 @@ export class SeekCommand extends Command {
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
 				embedReply.setDescription('You must specify the ammount of time to seek!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

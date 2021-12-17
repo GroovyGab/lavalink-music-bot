@@ -7,7 +7,8 @@ import { Message, MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'search',
-	description: 'Searches for your query on YouTube and lets you choose which songs to queue; To queue a track of the results, just type the number preceding it.',
+	description:
+		'Searches for your query on YouTube and lets you choose which songs to queue; To queue a track of the results, just type the number preceding it.',
 	fullCategory: ['music']
 })
 export class SearchCommand extends Command {
@@ -18,11 +19,11 @@ export class SearchCommand extends Command {
 
 		const embedReply = new MessageEmbed();
 		try {
-			return await message.channel.send(':(');
+			return message.channel.send(':(');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

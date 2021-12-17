@@ -22,22 +22,28 @@ export class QueueCommand extends Command {
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return await message.channel.send({ embeds: [embedReply] });
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer.queue.length) {
-				embedReply.setDescription(`${erelaPlayer.queue.current ? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n` : ''}The queue is empty.`);
-				return await message.channel.send({ embeds: [embedReply] });
+				embedReply.setDescription(
+					`${
+						erelaPlayer.queue.current
+							? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n`
+							: ''
+					}The queue is empty.`
+				);
+				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			/**
@@ -65,13 +71,19 @@ export class QueueCommand extends Command {
 				template: new MessageEmbed()
 			});
 
-			queueTextArrr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
+			queueTextArrr.forEach((textChunk) =>
+				paginatedMessage.addPageEmbed((embed) =>
+					embed.setDescription(
+						`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`
+					)
+				)
+			);
 			return await paginatedMessage.run(message, message.author);
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }

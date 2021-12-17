@@ -4,6 +4,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { Message, MessageEmbed } from 'discord.js';
+import LyricsFinder from 'lyrics-finder';
 
 @ApplyOptions<CommandOptions>({
 	name: 'lyrics',
@@ -18,11 +19,19 @@ export class LyricsCommand extends Command {
 		const embedReply = new MessageEmbed();
 
 		try {
-			return await message.channel.send(':(');
+			const lyrics = await LyricsFinder('cidergirl', 'id');
+
+			if (!lyrics) {
+				console.log('no lyrics');
+				return;
+			}
+
+			console.log(lyrics);
+			return message.channel.send(':(');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return await message.channel.send({ embeds: [embedReply] });
+			return message.channel.send({ embeds: [embedReply] });
 		}
 	}
 }
