@@ -30,7 +30,7 @@ export class NightcoreCommand extends Command {
 				}
 			};
 			await erelaPlayer?.node.send(data);
-			return await message.channel.send(':(');
+			return message.channel.send(':(');
 		} catch (error: any) {
 			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
