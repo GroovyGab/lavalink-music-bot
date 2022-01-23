@@ -50,5 +50,4 @@ export class MusicBotClient extends SapphireClient {
 	public sleep(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
 	}
-   }
 }
