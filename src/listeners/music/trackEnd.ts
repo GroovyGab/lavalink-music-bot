@@ -11,11 +11,11 @@ export class NodeReconnectEvent extends Listener {
 	}
 
 	public run(player: Player, track: Track) {
-		this.container.logger;
 		const guild = this.container.client.guilds.cache.get(player.guild);
 
 		this.container.logger.info(
-			`Track "${track.title}" by "${track.author}" started playing in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
+			`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester}`
 		);
+
 	}
 }
