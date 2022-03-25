@@ -43,7 +43,7 @@ export class ClearCommand extends Command {
 			erelaPlayer.queue.clear();
 			return await message.react('👌');
 		} catch (error: any) {
-			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
+			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.channel.send({ embeds: [embedReply] });
 		}

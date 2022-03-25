@@ -15,12 +15,11 @@
 		"@sapphire/plugin-subcommands": "^2.1.2",
 		"@sapphire/type": "^2.1.1",
 		"@sapphire/utilities": "^3.0.8",
-		"cz-conventional-changelog": "^3.3.0",
+		"cz-conventional-changelog": "^3.0.1",
 		"discord.js": "^13.3.1",
 		"dotenv-cra": "^3.0.2",
 		"erela.js": "^2.3.3",
 		"erela.js-spotify": "^1.2.0",
-		"lyrics-finder": "^21.7.0",
 		"reflect-metadata": "^0.1.13",
 		"statcord.js": "^3.3.0",
 		"string-progressbar": "^1.0.4"

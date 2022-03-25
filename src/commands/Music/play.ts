@@ -100,17 +100,17 @@ export class PlayCommand extends Command {
 				const playlistLength = `**${result.tracks.length - 1}**`;
 
 				embedReply.setDescription(
-					`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) and ${
-						result.tracks.length - 1 <= 0 ? '**no**' : playlistLength
+					`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) and ${result.tracks.length - 1 <= 0 ? '**no**' : playlistLength
 					} other tracks [${result.tracks[0].requester}]`
 				);
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.queue.add(result.tracks[0]);
+
 			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
 
-			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri}) [${result.tracks[0].requester}]`);
+			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) [${result.tracks[0].requester}]`);
 			return message.channel.send({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {
@@ -118,7 +118,7 @@ export class PlayCommand extends Command {
 				return message.channel.send({ embeds: [embedReply] });
 			}
 
-			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
+			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.channel.send({ embeds: [embedReply] });
 		}

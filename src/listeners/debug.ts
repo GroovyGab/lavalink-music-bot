@@ -11,6 +11,6 @@ export class DebugEvent extends Listener<typeof Events.Debug> {
 	}
 
 	public run(message: string) {
-		this.container.client.logger.debug(gray(message));
+		this.container.logger.debug(gray(message));
 	}
 }

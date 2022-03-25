@@ -69,7 +69,7 @@ export class QueueCommand extends Command {
 			queueTextArr.forEach((textChunk) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(`__Now Playing:__\n[${erelaPlayer.queue.current?.title}](${erelaPlayer.queue.current?.uri}) - [${erelaPlayer.queue.current?.requester}]\n\n${textChunk[0]}`)));
 			return await paginatedMessage.run(message, message.author);
 		} catch (error: any) {
-			this.container.client.logger.error(`There was an unexpected error in command "${this.name}"`, error);
+			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
 			return message.channel.send({ embeds: [embedReply] });

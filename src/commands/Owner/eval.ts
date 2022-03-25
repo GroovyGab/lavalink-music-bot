@@ -106,7 +106,7 @@ export class EvalCommand extends Command {
 			result = eval(code);
 		} catch (error) {
 			if (error && error instanceof Error && error.stack) {
-				this.container.client.logger.error(error);
+				this.container.logger.error(error);
 			}
 			//@ts-ignore
 			result = error.message;
