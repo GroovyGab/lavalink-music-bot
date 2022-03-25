@@ -25,7 +25,6 @@ export class MusicBotClient extends SapphireClient {
 			]
 		});
 
-		this.validate();
 		this.manager = new LavalinkHandler(this);
 		this.statcord = new StatcordClient({
 			key: process.env['STATCORD_KEY']!,
@@ -50,31 +49,5 @@ export class MusicBotClient extends SapphireClient {
 
 	public sleep(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
-	}
-
-	private validate() {
-		if (!process.env.DISCORD_TOKEN) {
-			throw new Error('A Valid Discord bot token must be provided!');
-		}
-
-		if (!process.env.PREFIX) {
-			throw new Error('A prefix for the bot must be provided!');
-		}
-
-		if (!process.env.OWNERS) {
-			throw new Error('A owner/s ID must be specified!');
-		}
-
-		if (!process.env.LAVALINK_HOST) {
-			throw new Error("A Lavalink node's host must be specified!");
-		}
-
-		if (!process.env.LAVALINK_PORT) {
-			throw new Error("A Lavalink node's port must be specified!");
-		}
-
-		if (!process.env.LAVALINK_PASSWD) {
-			throw new Error("A Lavalink node's password must be specified!");
-		}
 	}
 }
