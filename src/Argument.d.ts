@@ -2,7 +2,7 @@ import type { Collection } from 'discord.js';
 import type { Player } from 'erela.js';
 import type { LavalinkHandler } from './structures/Music/LavalinkHandler';
 import type { Queue } from './structures/Music/Queue';
-import { Client as StatcordClient} from "statcord.js";
+import { Client as StatcordClient } from 'statcord.js';
 
 declare module 'discord.js' {
 	interface Client {

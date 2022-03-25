@@ -77,7 +77,11 @@ export class PlayCommand extends Command {
 				if (userVoiceChannel.type === 'GUILD_STAGE_VOICE') {
 					const newVoiceChannelPerms = userVoiceChannel.permissionsFor(message.guild.me);
 
-					if (newVoiceChannelPerms.has('MANAGE_CHANNELS') && newVoiceChannelPerms.has('MUTE_MEMBERS') && newVoiceChannelPerms.has('MOVE_MEMBERS')) {
+					if (
+						newVoiceChannelPerms.has('MANAGE_CHANNELS') &&
+						newVoiceChannelPerms.has('MUTE_MEMBERS') &&
+						newVoiceChannelPerms.has('MOVE_MEMBERS')
+					) {
 						message.guild.me.voice.setSuppressed(false);
 					} else {
 						warnEmbed.setDescription(
@@ -100,7 +104,8 @@ export class PlayCommand extends Command {
 				const playlistLength = `**${result.tracks.length - 1}**`;
 
 				embedReply.setDescription(
-					`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) and ${result.tracks.length - 1 <= 0 ? '**no**' : playlistLength
+					`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) and ${
+						result.tracks.length - 1 <= 0 ? '**no**' : playlistLength
 					} other tracks [${result.tracks[0].requester}]`
 				);
 				return message.channel.send({ embeds: [embedReply] });
@@ -110,7 +115,9 @@ export class PlayCommand extends Command {
 
 			if (!erelaPlayer.playing && !erelaPlayer.paused && !erelaPlayer.queue.size) erelaPlayer.play();
 
-			embedReply.setDescription(`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) [${result.tracks[0].requester}]`);
+			embedReply.setDescription(
+				`Queued [${result.tracks[0].title}](${result.tracks[0].uri ? result.tracks[0].uri : search}) [${result.tracks[0].requester}]`
+			);
 			return message.channel.send({ embeds: [embedReply] });
 		} catch (error: any) {
 			if (error.identifier === 'argsMissing') {

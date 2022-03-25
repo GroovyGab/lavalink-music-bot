@@ -15,7 +15,9 @@ export class VoiceStateUpdateEvent extends Listener<typeof Events.VoiceStateUpda
 
 		if (erelaPlayer) {
 			if (this.getSizeWithoutBots(_oldState.channel) === 0) {
-				this.container.logger.info(`There are no users left in channel ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}], Disconnecting after ${process.env.DISCONNECT_DELAY} seconds.`);
+				this.container.logger.info(
+					`There are no users left in channel ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}], Disconnecting after ${process.env.DISCONNECT_DELAY} seconds.`
+				);
 
 				setTimeout(() => {
 					if (this.getSizeWithoutBots(_oldState.channel) === 0) {
@@ -32,7 +34,9 @@ export class VoiceStateUpdateEvent extends Listener<typeof Events.VoiceStateUpda
 						}
 						erelaPlayer.destroy();
 					} else {
-						this.container.logger.info(`The bot will not disconnect, There are users in the voice channel: ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}]`);
+						this.container.logger.info(
+							`The bot will not disconnect, There are users in the voice channel: ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}]`
+						);
 					}
 				}, parseInt(process.env.DISCONNECT_DELAY!) * 1000);
 			}
