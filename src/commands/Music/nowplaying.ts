@@ -52,7 +52,7 @@ export class NowPlayingCommand extends Command {
 			const totalTrackLength = trackIsStream ? '' : `${this.msToHMS(trackLength)}`;
 			const embedFooter = trackIsStream ? trackProgress : `${splitProgressBar} ${trackProgress} / ${totalTrackLength}`;
 
-			embedReply.setDescription(`[${trackInfo.title}](${trackInfo.uri}) [${trackInfo.requester}]`).setFooter(embedFooter);
+			embedReply.setDescription(`[${trackInfo.title}](${trackInfo.uri}) [${trackInfo.requester}]`).setFooter({ text: embedFooter });
 
 			return message.channel.send({
 				embeds: [embedReply]

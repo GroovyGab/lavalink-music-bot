@@ -17,6 +17,5 @@ export class NodeReconnectEvent extends Listener {
 		this.container.logger.info(
 			`Track "${track.title}" by "${track.author}" ended in guild ${guild?.name}[${guild?.id}], Requester: ${track.requester.tag}`
 		);
-
 	}
 }

@@ -68,8 +68,10 @@ export class PlayCommand extends Command {
 					voiceChannel: message.member.voice.channel.id,
 					textChannel: message.channel.id,
 					selfDeafen: true,
-					volume: 10
+					volume: parseInt(process.env['DEFAULT_VOLUME']!)
 				});
+
+				erelaPlayer.existingLeaveTimeout = false;
 				erelaPlayer.connect();
 
 				await this.container.client.sleep(1000);

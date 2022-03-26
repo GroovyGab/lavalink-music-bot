@@ -35,7 +35,7 @@ export class EvalCommand extends Command {
 
 		if (output.length > 1024) {
 			embedReply
-				.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+				.setAuthor({ name: this.container.client.user?.username!, iconURL: this.container.client.user?.avatarURL()! })
 				.setDescription('**Evaluation complete!**')
 				.addFields([
 					{
@@ -57,7 +57,7 @@ export class EvalCommand extends Command {
 						value: 'Too long, sent as a file.'
 					}
 				])
-				.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+				.setFooter({ text: `Evaluated by ${message.author.tag}`, iconURL: message.author.avatarURL()! })
 				.setColor('AQUA');
 
 			return send(message, {
@@ -67,7 +67,7 @@ export class EvalCommand extends Command {
 		}
 
 		embedReply
-			.setAuthor(this.container.client.user?.username!, this.container.client.user?.avatarURL()!)
+			.setAuthor({ name: this.container.client.user?.username!, iconURL: this.container.client.user?.avatarURL()! })
 			.setDescription('**Evaluation complete!**')
 			.addFields([
 				{
@@ -89,7 +89,7 @@ export class EvalCommand extends Command {
 					value: output
 				}
 			])
-			.setFooter(`Evaluated by ${message.author.tag}`, message.author.avatarURL()!)
+			.setFooter({ text: `Evaluated by ${message.author.tag}`, iconURL: message.author.avatarURL()! })
 			.setColor('AQUA');
 
 		return send(message, { embeds: [embedReply] });

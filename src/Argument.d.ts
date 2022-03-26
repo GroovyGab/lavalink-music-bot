@@ -22,6 +22,12 @@ declare module '@sapphire/framework' {
 	}
 }
 
+declare module 'erela.js' {
+	interface Player {
+		existingLeaveTimeout?: boolean;
+	}
+}
+
 export interface ExtendedTrack extends Track {
 	readonly requester: User;
 }

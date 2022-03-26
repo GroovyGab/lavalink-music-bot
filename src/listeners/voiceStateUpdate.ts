@@ -10,35 +10,35 @@ export class VoiceStateUpdateEvent extends Listener<typeof Events.VoiceStateUpda
 		});
 	}
 
-	public async run(_oldState: VoiceState, _newState: VoiceState) {
-		const erelaPlayer = this.container.client.manager.get(_oldState.guild.id);
+	public async run(oldState: VoiceState, _newState: VoiceState) {
+		const erelaPlayer = this.container.client.manager.get(oldState.guild.id);
 
 		if (erelaPlayer) {
-			if (this.getSizeWithoutBots(_oldState.channel) === 0) {
-				this.container.logger.info(
-					`There are no users left in channel ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}], Disconnecting after ${process.env.DISCONNECT_DELAY} seconds.`
-				);
+			const vcSize = this.getSizeWithoutBots(oldState.channel);
+			if (vcSize === 0) {
+				this.container.logger.debug(`There are no users in this channel, ${oldState.channel?.name} (${oldState.channel?.id})`);
+				if (!erelaPlayer.existingLeaveTimeout) {
+					erelaPlayer.existingLeaveTimeout = true;
+					setTimeout(() => {
+						if (vcSize === 0) {
+							const channel = this.container.client.channels.cache.get(erelaPlayer.textChannel!);
 
-				setTimeout(() => {
-					if (this.getSizeWithoutBots(_oldState.channel) === 0) {
-						const channel = this.container.client.channels.cache.get(erelaPlayer.textChannel!);
+							if (channel && channel.isText()) {
+								// Groovy message lol
 
-						if (channel && channel.isText()) {
-							/**
-							 * Groovy message lol
-							 *
-							 * I left the voice channel because I was inactive for too long. If you are a Premium member, you can disable this by typing /247.
-							 */
-							const embed = new MessageEmbed().setDescription(`I left the voice channel because I was inactive for too long`);
-							channel.send({ embeds: [embed] });
+								// I left the voice channel because I was inactive for too long. If you are a Premium member, you can disable this by typing /247.
+
+								const embed = new MessageEmbed().setDescription(`I left the voice channel because I was inactive for too long`);
+								channel.send({ embeds: [embed] });
+							}
+							erelaPlayer.destroy();
+						} else {
+							this.container.logger.info(
+								`The bot will not disconnect, There are users in the voice channel: ${oldState.channel?.name} [${oldState.channel?.id}] from guild ${oldState.guild.name} [${oldState.channel?.id}]`
+							);
 						}
-						erelaPlayer.destroy();
-					} else {
-						this.container.logger.info(
-							`The bot will not disconnect, There are users in the voice channel: ${_oldState.channel?.name}[${_oldState.channel?.id}] from guild ${_oldState.guild.name}[${_oldState.channel?.id}]`
-						);
-					}
-				}, parseInt(process.env.DISCONNECT_DELAY!) * 1000);
+					}, parseInt(process.env.DISCONNECT_DELAY!) * 1000);
+				}
 			}
 		}
 	}

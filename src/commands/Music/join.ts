@@ -46,7 +46,7 @@ export class JoinCommand extends Command {
 				voiceChannel: message.member.voice.channel.id,
 				textChannel: message.channel.id,
 				selfDeafen: true,
-				volume: 10
+				volume: parseInt(process.env['DEFAULT_VOLUME']!)
 			});
 			erelaPlayer.connect();
 

@@ -1,6 +1,7 @@
 import { Manager } from 'erela.js';
 import type { MusicBotClient } from '../Client';
 import ErelaSpotify from 'erela.js-spotify';
+import { Structure } from 'erela.js';
 
 export class LavalinkHandler extends Manager {
 	constructor(client: MusicBotClient) {
@@ -28,6 +29,14 @@ export class LavalinkHandler extends Manager {
 				if (guild) guild.shard.send(payload);
 			}
 		});
+
+		Structure.extend(
+			'Player',
+			(Player) =>
+				class extends Player {
+					existingLeaveTimeout?: boolean;
+				}
+		);
 
 		/*this
 		.on('nodeRaw', console.log);*/ //This is for debugging.
