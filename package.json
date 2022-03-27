@@ -15,6 +15,8 @@
 		"@sapphire/plugin-subcommands": "^2.1.2",
 		"@sapphire/type": "^2.1.1",
 		"@sapphire/utilities": "^3.0.8",
+		"@sentry/node": "^6.19.2",
+		"@sentry/tracing": "^6.19.2",
 		"cz-conventional-changelog": "^3.0.1",
 		"discord.js": "^13.3.1",
 		"dotenv-cra": "^3.0.2",
