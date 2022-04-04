@@ -14,7 +14,7 @@
 		"@sapphire/plugin-logger": "^2.1.1",
 		"@sapphire/plugin-subcommands": "^2.1.2",
 		"@sapphire/type": "^2.1.1",
-		"@sapphire/utilities": "^3.0.8",
+		"@sapphire/utilities": "^3.6.2",
 		"@sentry/node": "^6.19.2",
 		"@sentry/tracing": "^6.19.2",
 		"cz-conventional-changelog": "^3.0.1",
