@@ -20,7 +20,6 @@ export class ReadyEvent extends Listener {
 		this.printStoreDebugInformation();
 
 		this.container.client.manager.init(this.container.client.id!);
-		this.container.client.statcord.autopost();
 	}
 
 	private printBanner() {

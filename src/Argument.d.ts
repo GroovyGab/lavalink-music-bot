@@ -2,13 +2,11 @@ import type { Collection, User } from 'discord.js';
 import type { Player, Track } from 'erela.js';
 import type { LavalinkHandler } from './structures/Music/LavalinkHandler';
 import type { Queue } from './structures/Music/Queue';
-import { Client as StatcordClient } from 'statcord.js';
 
 declare module 'discord.js' {
 	interface Client {
 		manager: LavalinkHandler;
 		sleep(ms: number): Promise<unknown>;
-		statcord: StatcordClient;
 	}
 }
 

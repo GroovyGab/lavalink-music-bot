@@ -23,7 +23,6 @@
 		"erela.js": "^2.3.3",
 		"erela.js-spotify": "^1.2.0",
 		"reflect-metadata": "^0.1.13",
-		"statcord.js": "^3.4.1",
 		"string-progressbar": "^1.0.4"
 	},
 	"devDependencies": {

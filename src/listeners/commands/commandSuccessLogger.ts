@@ -18,7 +18,6 @@ export class UserEvent extends Listener<typeof Events.CommandSuccess> {
 		const author = this.author(message.author);
 		const sentAt = message.guild ? this.guild(message.guild) : this.direct();
 		this.container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt}`);
-		this.container.client.statcord.postCommand(commandName, message.author.id);
 	}
 
 	public onLoad() {
