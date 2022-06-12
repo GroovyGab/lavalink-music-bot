@@ -1,37 +1,41 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions } from '@sapphire/framework';
-import { send } from '@sapphire/plugin-editable-commands';
+import { Command } from '@sapphire/framework';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
-import { Message, MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import { performance } from 'perf_hooks';
 import { inspect } from 'util';
 
-@ApplyOptions<CommandOptions>({
-	aliases: ['ev'],
-	description: 'Evaluates any JavaScript code',
-	quotes: [],
-	preconditions: ['OwnerOnly'],
-	flags: ['async', 'hidden', 'showHidden', 'silent', 's'],
-	options: ['depth']
-})
 export class EvalCommand extends Command {
-	public async messageRun(message: Message, args: Args) {
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'eval',
+			description: 'Evaluates any JavaScript code.',
+			preconditions: ['OwnerOnly'],
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
+
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
 		const startTimestamp = performance.now();
-		const code = await args.rest('string');
+		const code = interaction.options.getString('code')!;
+		const evalAsync = interaction.options.getBoolean('async');
 		const embedReply = new MessageEmbed();
 
-		const { result, success, type } = await this.eval(message, code, {
-			async: args.getFlags('async'),
-			depth: Number(args.getOption('depth')) ?? 0,
-			showHidden: args.getFlags('hidden', 'showHidden')
+		const { result, success, type } = await this.eval(interaction, code, {
+			async: evalAsync ? true : false
 		});
 
 		const tookMs = performance.now();
 
 		const output = success ? codeBlock('js', result) : codeBlock('bash', result);
-
-		if (args.getFlags('silent', 's')) return null;
 
 		if (output.length > 1024) {
 			embedReply
@@ -57,13 +61,10 @@ export class EvalCommand extends Command {
 						value: 'Too long, sent as a file.'
 					}
 				])
-				.setFooter({ text: `Evaluated by ${message.author.tag}`, iconURL: message.author.avatarURL()! })
+				.setFooter({ text: `Evaluated by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! })
 				.setColor('AQUA');
 
-			return send(message, {
-				files: [{ attachment: Buffer.from(output), name: 'output.txt' }],
-				embeds: [embedReply]
-			});
+			return interaction.reply({ files: [{ attachment: Buffer.from(output), name: 'output.txt' }], embeds: [embedReply] });
 		}
 
 		embedReply
@@ -89,14 +90,14 @@ export class EvalCommand extends Command {
 					value: output
 				}
 			])
-			.setFooter({ text: `Evaluated by ${message.author.tag}`, iconURL: message.author.avatarURL()! })
+			.setFooter({ text: `Evaluated by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! })
 			.setColor('AQUA');
 
-		return send(message, { embeds: [embedReply] });
+		return interaction.reply({ embeds: [embedReply] });
 	}
 
 	//@ts-ignore
-	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
+	private async eval(interaction: Command.ChatInputInteraction, code: string, flags: { async: boolean }) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
 
 		let success = true;
@@ -117,12 +118,21 @@ export class EvalCommand extends Command {
 		if (isThenable(result)) result = result;
 
 		if (typeof result !== 'string') {
-			result = inspect(result, {
-				depth: flags.depth,
-				showHidden: flags.showHidden
-			});
+			result = inspect(result);
 		}
 
 		return { result, success, type };
+	}
+
+	public override registerApplicationCommands(registry: Command.Registry) {
+		registry.registerChatInputCommand((builder) =>
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('code').setDescription('The JavaScript code to be evaluated.').setRequired(true))
+				.addBooleanOption((option) =>
+					option.setName('async').setDescription('Whether the code should be run in async mode or not.').setRequired(false)
+				)
+		);
 	}
 }

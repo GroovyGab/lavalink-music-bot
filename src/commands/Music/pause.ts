@@ -1,60 +1,63 @@
-/**
- * Module imports.
- */
-import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'pause',
-	description: 'Pauses your currently playing track.',
-	fullCategory: ['music']
-})
 export class PauseCommand extends Command {
-	public async messageRun(message: Message) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'pause',
+			description: 'Pauses your currently playing track.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
 
-		const erelaPlayer = this.container.client.manager.get(message.guild.id);
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		const erelaPlayer = this.container.client.manager.get(interaction.guild.id);
 		const embedReply = new MessageEmbed();
-		const userVoiceChannel = message.member.voice.channel;
-		const botVoiceChannel = message.guild.me.voice.channel;
+		const userVoiceChannel = interaction.guild.members.cache.get(interaction.user.id)?.voice.channel;
+		const botVoiceChannel = interaction.guild.me.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer.paused) {
 				embedReply.setDescription('The playback is already paused!').setColor('RED');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.pause(true);
 
-			return await message.react('⏸️');
+			return await interaction.reply('⏸️');
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply] });
 		}
 	}
 }

@@ -1,24 +1,24 @@
-import type { CommandSuccessPayload, ListenerOptions, PieceContext } from '@sapphire/framework';
+import type { ChatInputCommandSuccessPayload, ListenerOptions, PieceContext } from '@sapphire/framework';
 import { Command, Events, Listener, LogLevel } from '@sapphire/framework';
 import type { Logger } from '@sapphire/plugin-logger';
 import { cyan } from 'colorette';
 import type { Guild, User } from 'discord.js';
 
-export class UserEvent extends Listener<typeof Events.CommandSuccess> {
+export class UserEvent extends Listener<typeof Events.ChatInputCommandSuccess> {
 	public constructor(context: PieceContext, options?: ListenerOptions) {
 		super(context, {
 			...options,
-			event: Events.CommandSuccess
+			event: Events.ChatInputCommandSuccess
 		});
 	}
 
-	public run({ message, command }: CommandSuccessPayload) {
-		const shard = this.shard(message.guild?.shardId ?? 0);
+	public run({ interaction, command }: ChatInputCommandSuccessPayload) {
+		const shard = this.shard(interaction.guild?.shardId ?? 0);
 		const commandName = this.command(command);
-		const author = this.author(message.author);
-		const sentAt = message.guild ? this.guild(message.guild) : this.direct();
+		const author = this.author(interaction.user);
+		const sentAt = interaction.guild ? this.guild(interaction.guild) : this.direct();
 		this.container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt}`);
-		this.container.client.statcord.postCommand(commandName, message.author.id);
+		this.container.client.statcord.postCommand(Buffer.from(commandName, 'utf-8').toString(), interaction.user.id);
 	}
 
 	public onLoad() {

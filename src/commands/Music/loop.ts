@@ -1,45 +1,50 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'loop',
-	aliases: ['repeat', 'queue-repeat', 'queue-loop'],
-	description: 'Starts looping your currently playing track or the whole queue.',
-	fullCategory: ['music']
-})
 export class LoopCommand extends Command {
-	public async messageRun(message: Message, args: Args) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'loop',
+			description: 'Starts looping your currently playing track or the whole queue.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
 
-		const erelaPlayer = this.container.client.manager.get(message.guild.id);
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		const erelaPlayer = this.container.client.manager.get(interaction.guild.id);
 		const embedReply = new MessageEmbed();
-		const userVoiceChannel = message.member.voice.channel;
-		const botVoiceChannel = message.guild.me.voice.channel;
+		const userVoiceChannel = interaction.guild.members.cache.get(interaction.user.id)?.voice.channel;
+		const botVoiceChannel = interaction.guild.me.voice.channel;
 
 		try {
-			const loopMode = await args.rest('string');
+			const loopMode = interaction.options.getString('loopmode');
 
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
 				embedReply.setDescription("There's nothing currently playing on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			switch (loopMode) {
@@ -68,57 +73,46 @@ export class LoopCommand extends Command {
 					embedReply.setDescription('Looping is now **disabled**.');
 					break;
 				}
+				case null: {
+					if (erelaPlayer.trackRepeat) {
+						erelaPlayer.setTrackRepeat(false);
+						erelaPlayer.setQueueRepeat(true);
+						embedReply.setDescription('Now loping the **queue**.');
+						return interaction.reply({ embeds: [embedReply] });
+					}
+
+					if (erelaPlayer.queueRepeat) {
+						erelaPlayer.setQueueRepeat(false);
+						embedReply.setDescription('Looping is now **disabled**.');
+						return interaction.reply({ embeds: [embedReply] });
+					}
+
+					if (!erelaPlayer.trackRepeat && !erelaPlayer.queueRepeat) {
+						erelaPlayer.setTrackRepeat(true);
+						embedReply.setDescription('Now looping the **current track**.');
+						return interaction.reply({ embeds: [embedReply] });
+					}
+					break;
+				}
 				default: {
 					embedReply.setDescription('Invalid loop mode, the valid modes are: `current` `queue` `off`.');
 				}
 			}
 
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply] });
 		} catch (error: any) {
-			if (error.identifier === 'argsMissing') {
-				if (!userVoiceChannel) {
-					embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel?.id) {
-					embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if (!erelaPlayer) {
-					embedReply.setDescription("There isn't an active player on this server!");
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if ((!erelaPlayer.playing && !erelaPlayer.paused) || !erelaPlayer.queue.current) {
-					embedReply.setDescription("There's nothing currently playing on this server!");
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if (erelaPlayer.trackRepeat) {
-					erelaPlayer.setTrackRepeat(false);
-					erelaPlayer.setQueueRepeat(true);
-					embedReply.setDescription('Now loping the **queue**.');
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if (erelaPlayer.queueRepeat) {
-					erelaPlayer.setQueueRepeat(false);
-					embedReply.setDescription('Looping is now **disabled**.');
-					return message.channel.send({ embeds: [embedReply] });
-				}
-
-				if (!erelaPlayer.trackRepeat && !erelaPlayer.queueRepeat) {
-					erelaPlayer.setTrackRepeat(true);
-					embedReply.setDescription('Now looping the **current track**.');
-					return message.channel.send({ embeds: [embedReply] });
-				}
-			}
-
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply], ephemeral: true });
 		}
+	}
+
+	public override registerApplicationCommands(registry: Command.Registry) {
+		registry.registerChatInputCommand((builder) =>
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('loopmode').setDescription('The loop mode that you want to enable.').setRequired(false))
+		);
 	}
 }

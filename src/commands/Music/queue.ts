@@ -1,38 +1,44 @@
-import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'queue',
-	description: 'Shows the music queue.',
-	fullCategory: ['music']
-})
 export class QueueCommand extends Command {
-	public async messageRun(message: Message) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'queue',
+			description: 'Shows the music queue.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
 
-		const erelaPlayer = this.container.client.manager.get(message.guild.id);
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		const erelaPlayer = this.container.client.manager.get(interaction.guild.id);
 		const embedReply = new MessageEmbed();
-		const userVoiceChannel = message.member.voice.channel;
-		const botVoiceChannel = message.guild.me.voice.channel;
+		const userVoiceChannel = interaction.guild.members.cache.get(interaction.user.id)?.voice.channel;
+		const botVoiceChannel = interaction.guild.me.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer.queue.length) {
@@ -40,12 +46,9 @@ export class QueueCommand extends Command {
 					? `__Now Playing:__\n[${erelaPlayer.queue.current.title}](${erelaPlayer.queue.current.uri}) - [${erelaPlayer.queue.current.requester}]\n\n`
 					: '';
 				embedReply.setDescription(`${nowPlaying}The queue is empty.`);
-				return await message.channel.send({ embeds: [embedReply] });
+				return await interaction.reply({ embeds: [embedReply] });
 			}
 
-			/**
-			 * This is a mess but it works
-			 */
 			const trackNamesArr = erelaPlayer?.queue.map((track, i) => `\`${i + 1}.\` [${track.title}](${track.uri}) - [${track.requester}]`);
 
 			const trackNameArrChunks = trackNamesArr.reduce((resultArray: string[][], item, index) => {
@@ -75,12 +78,12 @@ export class QueueCommand extends Command {
 					)
 				)
 			);
-			return await paginatedMessage.run(message, message.author);
+			return await paginatedMessage.run(interaction, interaction.user);
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply] });
 		}
 	}
 }

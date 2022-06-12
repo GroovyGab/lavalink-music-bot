@@ -1,51 +1,56 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'clear',
-	aliases: ['clear-queue', 'delete-queue'],
-	description: 'Removes all tracks from the queue.',
-	fullCategory: ['music']
-})
 export class ClearCommand extends Command {
-	public async messageRun(message: Message) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'clear',
+			description: 'Removes all tracks from the queue.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
 
-		const erelaPlayer = this.container.client.manager.get(message.guild.id);
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		const erelaPlayer = this.container.client.manager.get(interaction.guild.id);
 		const embedReply = new MessageEmbed();
-		const { channel: userVoiceChannel } = message.member.voice;
-		const { channel: botVoiceChannel } = message.guild.me.voice;
+		const userVoiceChannel = interaction.guild.members.cache.get(interaction.user.id)?.voice.channel;
+		const botVoiceChannel = interaction.guild.me.voice.channel;
 
 		try {
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer && botVoiceChannel && userVoiceChannel.id !== botVoiceChannel.id) {
 				embedReply.setDescription('You need to be in the same voice channel as the bot before you can use this command!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (!erelaPlayer) {
 				embedReply.setDescription("There isn't an active player on this server!");
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			if (erelaPlayer.queue.length <= 0) {
 				embedReply.setDescription('The queue is already empty!');
-				return message.channel.send({ embeds: [embedReply] });
+				return interaction.reply({ embeds: [embedReply] });
 			}
 
 			erelaPlayer.queue.clear();
-			return await message.react('👌');
+			return await interaction.reply('👌');
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply], ephemeral: true });
 		}
 	}
 }

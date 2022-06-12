@@ -1,29 +1,32 @@
-/**
- * Module imports.
- */
-import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import type { SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import { Message, MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
-	name: 'remove',
-	description: 'Removes the specified track from the queue.',
-	fullCategory: ['music']
-})
-export class RemoveCommand extends Command {
-	public async messageRun(message: Message) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+export class TwentyFourSevenCommand extends Command {
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'remove',
+			description: 'Removes the specified track from the queue.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
+
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
 
 		const embedReply = new MessageEmbed();
+
 		try {
-			return message.channel.send(':(');
+			return interaction.reply(':(');
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply], ephemeral: true });
 		}
 	}
 }

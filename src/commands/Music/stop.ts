@@ -1,28 +1,32 @@
-/**
- * Module imports.
- */
-import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 
-@ApplyOptions<CommandOptions>({
-	name: 'stop',
-	description: 'Stops the currently playing track and returns to the beginning of the queue.',
-	fullCategory: ['music']
-})
-export class StopCommand extends Command {
-	public async messageRun(message: Message) {
-		if (!message.guild) return;
-		if (!message.member) return;
-		if (!message.guild.me) return;
+export class SpeedCommand extends Command {
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'stop',
+			description: 'Stops the currently playing track and returns to the beginning of the queue.',
+			chatInputCommand: {
+				register: true
+			}
+		});
+	}
+
+	public async chatInputRun(interaction: Command.ChatInputInteraction) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
 
 		const embedReply = new MessageEmbed();
+
 		try {
-			return message.channel.send(':(');
+			return interaction.reply(':(');
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
-			return message.channel.send({ embeds: [embedReply] });
+			return interaction.reply({ embeds: [embedReply] });
 		}
 	}
 }
