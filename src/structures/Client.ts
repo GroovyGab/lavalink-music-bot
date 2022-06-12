@@ -1,6 +1,7 @@
 import '../lib/setup';
 import { SapphireClient, LogLevel } from '@sapphire/framework';
 import { LavalinkHandler } from './Music/LavalinkHandler';
+import { Client as StatcordClient } from 'statcord.js';
 
 export class MusicBotClient extends SapphireClient {
 	constructor() {
@@ -25,7 +26,6 @@ export class MusicBotClient extends SapphireClient {
 		});
 
 		this.manager = new LavalinkHandler(this);
-<<<<<<< HEAD
 
 		this.statcord = new StatcordClient({
 			key: process.env['STATCORD_KEY']!,
@@ -34,8 +34,6 @@ export class MusicBotClient extends SapphireClient {
 			postMemStatistics: true,
 			postNetworkStatistics: true
 		});
-=======
->>>>>>> b583484d3a14ef83aef688bee2e058aa7ccfd42d
 	}
 
 	public async main() {
