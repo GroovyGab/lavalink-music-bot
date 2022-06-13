@@ -6,7 +6,7 @@ export class VolumeCommand extends Command {
 		super(context, {
 			...options,
 			name: 'volume',
-			description: 'Sets the player\'s volume; If you input "reset", it will set the volume back to default.',
+			description: 'Sets/shows the player\'s volume; If you input "reset", it will set the volume back to default.',
 			chatInputCommand: {
 				register: true
 			}
@@ -47,6 +47,11 @@ export class VolumeCommand extends Command {
 				return interaction.reply({ embeds: [embedReply] });
 			}
 
+			if (!volume) {
+				embedReply.setDescription(`The volume is currently set at \`${erelaPlayer.volume}%\``);
+				return interaction.reply({ embeds: [embedReply] });
+			}
+
 			if (!volume || volume < 0 || volume > 100) {
 				embedReply.setDescription('The volume needs to be a value between 0 and 100.');
 				return interaction.reply({ embeds: [embedReply] });
@@ -72,7 +77,7 @@ export class VolumeCommand extends Command {
 			builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.addStringOption((option) => option.setName('volume').setDescription('The volume to be set (100% max).').setRequired(true))
+				.addStringOption((option) => option.setName('volume').setDescription('The volume to be set (100% max).').setRequired(false))
 		);
 	}
 }
