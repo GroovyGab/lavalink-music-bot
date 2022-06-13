@@ -1,5 +1,6 @@
 import { Command } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
+import type { Player } from 'erela.js';
 
 export class LoopCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
@@ -25,8 +26,6 @@ export class LoopCommand extends Command {
 		const botVoiceChannel = interaction.guild.me.voice.channel;
 
 		try {
-			const loopMode = interaction.options.getString('loopmode');
-
 			if (!userVoiceChannel) {
 				embedReply.setDescription('You have to be connected to a voice channel before you can use this command!');
 				return interaction.reply({ embeds: [embedReply] });
@@ -47,33 +46,21 @@ export class LoopCommand extends Command {
 				return interaction.reply({ embeds: [embedReply] });
 			}
 
-			switch (loopMode) {
-				case 'track':
-				case 'current': {
-					erelaPlayer.setTrackRepeat(true);
-					embedReply.setDescription('Now looping the **current track**.');
-					break;
+			const subcommand = interaction.options.getSubcommand();
+
+			switch (subcommand) {
+				case 'track': {
+					return this.trackLoop(interaction, erelaPlayer, embedReply);
 				}
-				case 'all':
 				case 'queue': {
-					erelaPlayer.setQueueRepeat(true);
-					embedReply.setDescription('Now looping the **queue**.');
-					break;
+					return this.queueLoop(interaction, erelaPlayer, embedReply);
 				}
-				case 'disable':
 				case 'off': {
-					if (erelaPlayer.trackRepeat) {
-						erelaPlayer.setTrackRepeat(false);
-					}
-
-					if (erelaPlayer.queueRepeat) {
-						erelaPlayer.setQueueRepeat(false);
-					}
-
-					embedReply.setDescription('Looping is now **disabled**.');
-					break;
+					return this.offLoop(interaction, erelaPlayer, embedReply);
 				}
-				case null: {
+			}
+
+			/*case null: {
 					if (erelaPlayer.trackRepeat) {
 						erelaPlayer.setTrackRepeat(false);
 						erelaPlayer.setQueueRepeat(true);
@@ -93,13 +80,7 @@ export class LoopCommand extends Command {
 						return interaction.reply({ embeds: [embedReply] });
 					}
 					break;
-				}
-				default: {
-					embedReply.setDescription('Invalid loop mode, the valid modes are: `current` `queue` `off`.');
-				}
-			}
-
-			return interaction.reply({ embeds: [embedReply] });
+				}*/
 		} catch (error: any) {
 			this.container.logger.error(`There was an unexpected error in command "${this.name}"`, error);
 			embedReply.setDescription('There was an unexpected error while processing the command, try again later.');
@@ -107,12 +88,56 @@ export class LoopCommand extends Command {
 		}
 	}
 
+	public trackLoop(interaction: Command.ChatInputInteraction, erelaPlayer: Player, embedReply: MessageEmbed) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		erelaPlayer.setTrackRepeat(true);
+		embedReply.setDescription('Now looping the **current track**.');
+		return interaction.reply({ embeds: [embedReply] });
+	}
+
+	public queueLoop(interaction: Command.ChatInputInteraction, erelaPlayer: Player, embedReply: MessageEmbed) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		erelaPlayer.setQueueRepeat(true);
+		embedReply.setDescription('Now looping the **queue**.');
+		return interaction.reply({ embeds: [embedReply] });
+	}
+
+	public offLoop(interaction: Command.ChatInputInteraction, erelaPlayer: Player, embedReply: MessageEmbed) {
+		if (!interaction.guild) return;
+		if (!interaction.member) return;
+		if (!interaction.guild.me) return;
+		if (!interaction.channel) return;
+
+		if (erelaPlayer.trackRepeat) {
+			erelaPlayer.setTrackRepeat(false);
+		}
+
+		if (erelaPlayer.queueRepeat) {
+			erelaPlayer.setQueueRepeat(false);
+		}
+
+		embedReply.setDescription('Looping is now **disabled**.');
+		return interaction.reply({ embeds: [embedReply] });
+	}
+
 	public override registerApplicationCommands(registry: Command.Registry) {
-		registry.registerChatInputCommand((builder) =>
-			builder
-				.setName(this.name)
-				.setDescription(this.description)
-				.addStringOption((option) => option.setName('loopmode').setDescription('The loop mode that you want to enable.').setRequired(false))
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addSubcommand((command) => command.setName('track').setDescription('Loops the currently playing track.'))
+					.addSubcommand((command) => command.setName('queue').setDescription('Loops the whole queue.'))
+					.addSubcommand((command) => command.setName('off').setDescription('Turns off looping.'))
+			//.addStringOption((option) => option.setName('loopmode').setDescription('The loop mode that you want to enable.').setRequired(false))
 		);
 	}
 }

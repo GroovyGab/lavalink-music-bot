@@ -20,11 +20,7 @@ export class ReadyEvent extends Listener {
 		this.printStoreDebugInformation();
 
 		this.container.client.manager.init(this.container.client.id!);
-
-		/*setTimeout(() => {
-			this.container.client.application?.commands.set([])
-			console.log("deleted all (/)")
-		}, 10000);*/
+		//this.container.client.statcord.autopost();
 	}
 
 	private printBanner() {

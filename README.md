@@ -1,4 +1,5 @@
 # Lavalink Music Bot
+
 # Slash Commands Live now!!
 
 I made this bot because, well, groovy was taken down, so I made my own clone.

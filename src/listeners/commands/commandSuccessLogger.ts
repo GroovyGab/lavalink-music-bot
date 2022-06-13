@@ -18,6 +18,7 @@ export class UserEvent extends Listener<typeof Events.ChatInputCommandSuccess> {
 		const author = this.author(interaction.user);
 		const sentAt = interaction.guild ? this.guild(interaction.guild) : this.direct();
 		this.container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt}`);
+		//this.container.client.statcord.postCommand(Buffer.from(commandName, 'utf-8').toString(), interaction.user.id);
 	}
 
 	public onLoad() {

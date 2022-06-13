@@ -1,6 +1,7 @@
 import '../lib/setup';
 import { SapphireClient, LogLevel } from '@sapphire/framework';
 import { LavalinkHandler } from './Music/LavalinkHandler';
+//import { Client as StatcordClient } from 'statcord.js';
 
 export class MusicBotClient extends SapphireClient {
 	constructor() {
@@ -11,20 +12,18 @@ export class MusicBotClient extends SapphireClient {
 				level: LogLevel.Debug
 			},
 			shards: 'auto',
-			intents: [
-				'GUILDS',
-				'GUILD_MEMBERS',
-				'GUILD_BANS',
-				'GUILD_EMOJIS_AND_STICKERS',
-				'GUILD_VOICE_STATES',
-				'GUILD_MESSAGES',
-				'GUILD_MESSAGE_REACTIONS',
-				'DIRECT_MESSAGES',
-				'DIRECT_MESSAGE_REACTIONS'
-			]
+			intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_VOICE_STATES']
 		});
 
 		this.manager = new LavalinkHandler(this);
+
+		/*this.statcord = new StatcordClient({
+			key: process.env['STATCORD_KEY']!,
+			client: this,
+			postCpuStatistics: true,
+			postMemStatistics: true,
+			postNetworkStatistics: true
+		});*/
 	}
 
 	public async main() {

@@ -45,7 +45,7 @@ export class NodeReconnectEvent extends Listener {
 		}
 		const embedReply = new MessageEmbed();
 
-		embedReply.setDescription(`Queue has ended, feel free to add more songs using  \`${process.env.PREFIX}play\`.`);
+		embedReply.setDescription(`Queue has ended, feel free to add more songs using  \`/play\`.`);
 
 		const guild = this.container.client.guilds.cache.get(player.guild);
 		const channel = this.container.client.channels.cache.get(player.textChannel);
