@@ -8,7 +8,7 @@
 		"@discordjs/collection": "^0.7.0",
 		"@discordjs/rest": "^0.1.0-canary.0",
 		"@sapphire/decorators": "^4.3.6",
-		"@sapphire/discord.js-utilities": "^4.1.5",
+		"@sapphire/discord.js-utilities": "^4.12.0",
 		"@sapphire/framework": "^3.0.0-next.838919c.0",
 		"@sapphire/plugin-editable-commands": "^1.1.1",
 		"@sapphire/plugin-logger": "^2.1.1",
