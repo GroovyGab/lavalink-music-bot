@@ -18,7 +18,7 @@
 		"@sentry/node": "^6.19.2",
 		"@sentry/tracing": "^7.1.1",
 		"discord-api-types": "^0.34.0",
-		"discord.js": "^13.3.1",
+		"discord.js": "^14.7.0",
 		"dotenv-cra": "^3.0.2",
 		"erela.js": "^2.3.3",
 		"erela.js-spotify": "^1.2.0",
