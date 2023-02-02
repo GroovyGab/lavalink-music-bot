@@ -16,7 +16,7 @@
 		"@sapphire/type": "^2.2.4",
 		"@sapphire/utilities": "^3.0.8",
 		"@sentry/node": "^6.19.2",
-		"@sentry/tracing": "^7.1.1",
+		"@sentry/tracing": "^7.35.0",
 		"discord-api-types": "^0.34.0",
 		"discord.js": "^13.3.1",
 		"dotenv-cra": "^3.0.2",
